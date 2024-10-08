@@ -1,21 +1,55 @@
-<!-- clips/templates/clips/clip_list.html -->
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lista de Clips</title>
+    <!-- Enlace a Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
-    <h1>Lista de Clips</h1>
-    <ul>
-        {% for clip in clips %}
-            <li>
-                <a href="{{ clip.url }}">{{ clip.title }}</a>
-                <p>Streamer: {{ clip.streamer.name }}</p>
-                <p>Creado en: {{ clip.twitch_created_at }}</p>
-            </li>
-        {% endfor %}
-    </ul>
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">Lista de Clips</h1>
+
+        <!-- Filtro por streamer -->
+        <div class="mb-4">
+            <form method="GET" action="{% url 'clip_list' %}">
+                <div class="input-group">
+                    <select name="streamer" class="custom-select" onchange="this.form.submit()">
+                        <option value="">Todos los clips</option>
+                        {% for streamer in streamers %}
+                            <option value="{{ streamer.id }}" {% if request.GET.streamer == streamer.id|stringformat:"d" %}selected{% endif %}>{{ streamer.name }}</option>
+
+                        {% endfor %}
+                    </select>
+                </div>
+            </form>
+        </div>
+
+        <!-- Tarjetas de clips -->
+        <div class="row">
+            {% for clip in clips %}
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ clip.title }}</h5>
+                            <p class="card-text">Streamer: <a href="{% url 'streamer_clips' clip.streamer.id %}">{{ clip.streamer.name }}</a></p>
+                            <p class="card-text">Idioma: {{ clip.language }}</p>
+                            <p class="card-text">Creado en: {{ clip.twitch_created_at|date:"D, d M Y H:i:s" }}</p>
+                            <a href="{{ clip.url }}" class="btn btn-primary" target="_blank">Ver Clip</a>
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <p>No hay clips disponibles.</p>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Enlace a Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
+

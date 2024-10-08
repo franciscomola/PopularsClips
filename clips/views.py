@@ -1,13 +1,20 @@
 
 from django.shortcuts import render
 from .models import Clip, Streamer
+from django.shortcuts import render
+from .models import Clip, Streamer
 
 def clip_list(request):
-    """
-    Vista que muestra una lista de clips.
-    """
-    clips = Clip.objects.all()  # Obtener todos los clips de la base de datos
-    return render(request, 'clips/clip_list.html', {'clips': clips})
+    # Filtrado de clips por streamer
+    streamer_id = request.GET.get('streamer')
+    if streamer_id:
+        clips = Clip.objects.filter(streamer_id=streamer_id)
+    else:
+        clips = Clip.objects.all()
+
+    streamers = Streamer.objects.all()  # Obtener todos los streamers
+
+    return render(request, 'clips/clip_list.html', {'clips': clips, 'streamers': streamers, 'request': request})
 
 def streamer_clips(request, streamer_id):
     """
