@@ -54,7 +54,7 @@ class Command(BaseCommand):
 
         # Filtrar y ordenar los clips por cantidad de vistas
         # Asegúrate de que el campo 'view_count' existe en la respuesta de la API
-        sorted_clips = sorted(clips_data, key=lambda x: x.get('view_count', 0), reverse=True)[:10]  # Los 10 más populares
+        sorted_clips = sorted(clips_data, key=lambda x: x.get('view_count', 0), reverse=True)[:5]  # Los 10 más populares
 
         # Guardar o actualizar los clips en la base de datos
         for clip_data in sorted_clips:
