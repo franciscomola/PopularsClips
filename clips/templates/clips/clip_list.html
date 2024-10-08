@@ -1,0 +1,21 @@
+<!-- clips/templates/clips/clip_list.html -->
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Clips</title>
+</head>
+<body>
+    <h1>Lista de Clips</h1>
+    <ul>
+        {% for clip in clips %}
+            <li>
+                <a href="{{ clip.url }}">{{ clip.title }}</a>
+                <p>Streamer: {{ clip.streamer.name }}</p>
+                <p>Creado en: {{ clip.twitch_created_at }}</p>
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
