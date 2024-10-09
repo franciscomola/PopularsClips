@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <title>{{ clip.title }}</title>
+    <style>
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .video-container {
+            margin-bottom: 30px;
+        }
+        .comment-section {
+            margin-top: 20px;
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="video-container">
+            <h1>{{ clip.title }}</h1>
+            <!-- Usar un iframe para incrustar el clip -->
+            <iframe
+                src="{{ clip.url }}&parent=localhost"
+                height="480"
+                width="100%"
+                frameborder="0"
+                allowfullscreen>
+            </iframe>
+            <p><strong>Streamer:</strong> {{ clip.streamer.name }}</p>
+            <button class="btn btn-info" data-toggle="collapse" data-target="#details">Detalles</button>
+            <div id="details" class="collapse mt-3">
+                <p><strong>Idioma:</strong> {{ clip.language }}</p>
+                <p><strong>Descripción:</strong> {{ clip.description }}</p>
+                <p><strong>Creado en:</strong> {{ clip.twitch_created_at|date:"D, d M Y H:i:s" }}</p>
+                <!-- Puedes agregar más detalles aquí -->
+            </div>
+        </div>
+        
+        <div class="comment-section">
+            <h3>Comentarios</h3>
+            <form method="POST">
+                {% csrf_token %}
+                <div class="form-group">
+                    <textarea class="form-control" name="comment" rows="3" placeholder="Deja un comentario..."></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Comentar</button>
+            </form>
+            <hr>
+            <div class="comments-list">
+                {% for comment in comments %}
+                    <div class="comment">
+                        <p><strong>{{ comment.user }}</strong>: {{ comment.text }}</p>
+                    </div>
+                {% empty %}
+                    <p>No hay comentarios todavía.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+<style>
+    body {
+        background-color: #f8f9fa;
+        color: #212529;
+        transition: background-color 0.3s, color 0.3s;
+    }
+    .card {
+        background-color: white;
+        color: #212529;
+    }
+    .night-mode body {
+        background-color: #1c1c1c;
+        color: #f8f9fa;
+    }
+    .night-mode .card {
+        background-color: #333;
+        color: #f8f9fa;
+    }
+</style>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
+

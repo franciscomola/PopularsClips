@@ -4,10 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lista de Clips</title>
-    <!-- Enlace a Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    {% load static %}
+    <!-- Incluir el archivo noche.css -->
+    <link rel="stylesheet" href="{% static 'css/noche.css' %}">
 </head>
 <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">PopularClips</a>
+        <button id="toggle-mode" class="btn btn-dark ml-auto">Modo Noche</button>
+    </nav>
+
     <div class="container mt-5">
         <h1 class="text-center mb-4">Lista de Clips</h1>
 
@@ -19,7 +26,6 @@
                         <option value="">Todos los clips</option>
                         {% for streamer in streamers %}
                             <option value="{{ streamer.id }}" {% if request.GET.streamer == streamer.id|stringformat:"d" %}selected{% endif %}>{{ streamer.name }}</option>
-
                         {% endfor %}
                     </select>
                 </div>
@@ -31,12 +37,14 @@
             {% for clip in clips %}
                 <div class="col-md-4 mb-4">
                     <div class="card">
+                        <!-- Vista previa del clip -->
+                        <div class="embed-responsive embed-responsive-16by9 mb-2">
+                            <iframe class="embed-responsive-item" src="{{ clip.url }}&parent=localhost" allowfullscreen></iframe>
+                        </div>
                         <div class="card-body">
                             <h5 class="card-title">{{ clip.title }}</h5>
                             <p class="card-text">Streamer: <a href="{% url 'streamer_clips' clip.streamer.id %}">{{ clip.streamer.name }}</a></p>
-                            <p class="card-text">Idioma: {{ clip.language }}</p>
-                            <p class="card-text">Creado en: {{ clip.twitch_created_at|date:"D, d M Y H:i:s" }}</p>
-                            <a href="{{ clip.url }}" class="btn btn-primary" target="_blank">Ver Clip</a>
+                            <a href="{% url 'clip_detail' clip.id %}" class="btn btn-primary">Detalles</a>
                         </div>
                     </div>
                 </div>
@@ -50,6 +58,14 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <!-- Script para alternar el modo noche -->
+    <script>
+        document.getElementById('toggle-mode').addEventListener('click', function() {
+            document.body.classList.toggle('night-mode');
+            this.textContent = document.body.classList.contains('night-mode') ? 'Modo Día' : 'Modo Noche';
+        });
+    </script>
 </body>
 </html>
 

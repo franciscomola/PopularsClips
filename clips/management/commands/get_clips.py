@@ -1,3 +1,4 @@
+#get_clips
 import os
 import requests
 from django.utils import timezone
@@ -53,14 +54,13 @@ class Command(BaseCommand):
         clips_data = response.json().get('data', [])
 
         # Filtrar y ordenar los clips por cantidad de vistas
-        # Asegúrate de que el campo 'view_count' existe en la respuesta de la API
-        sorted_clips = sorted(clips_data, key=lambda x: x.get('view_count', 0), reverse=True)[:5]  # Los 10 más populares
+        sorted_clips = sorted(clips_data, key=lambda x: x.get('view_count', 0), reverse=True)[:5]  # Los 5 más populares
 
         # Guardar o actualizar los clips en la base de datos
         for clip_data in sorted_clips:
             Clip.objects.update_or_create(
                 streamer=streamer,
-                url=clip_data['url'],
+                url=clip_data['embed_url'],  # Usar la URL de incrustación
                 defaults={
                     'title': clip_data['title'],
                     'language': clip_data['language'],

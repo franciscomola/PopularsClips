@@ -1,0 +1,65 @@
+/* noche.css */
+
+body {
+    background-color: #f8f9fa;  /* Color de fondo claro por defecto */
+    color: #212529;  /* Color de texto claro por defecto */
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.card {
+    background-color: white;  /* Fondo blanco para las tarjetas */
+    color: #212529;  /* Texto oscuro para las tarjetas */
+}
+
+.navbar, .btn {
+    transition: background-color 0.3s, color 0.3s;
+}
+
+/* Estilos para el modo noche */
+.night-mode body {
+    background-color: #1c1c1c;  /* Color de fondo oscuro */
+    color: #f8f9fa;  /* Color de texto claro */
+}
+
+.night-mode .navbar, .night-mode .btn {
+    background-color: #333;  /* Fondo oscuro para la barra de navegación y botones */
+    color: #f8f9fa;  /* Texto claro para la barra de navegación y botones */
+}
+
+.night-mode .card {
+    background-color: #333;  /* Fondo oscuro para las tarjetas en modo noche */
+    color: #f8f9fa;  /* Texto claro para las tarjetas en modo noche */
+}
+
+.night-mode .custom-select, 
+.night-mode .card-title, 
+.night-mode .card-text {
+    background-color: #444;  /* Fondo gris oscuro para elementos de selección y texto en tarjetas */
+    color: #f8f9fa;  /* Texto claro */
+}
+
+.night-mode .form-control {
+    background-color: #555;  /* Fondo gris más oscuro para controles de formulario */
+    color: #f8f9fa;  /* Texto claro */
+}
+
+.embed-responsive {
+    position: relative;
+    display: block;
+    width: 100%;
+    padding: 0;
+    overflow: hidden;
+    padding-top: 56.25%;
+}
+
+.embed-responsive-item {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+}
+

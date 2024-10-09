@@ -19,7 +19,7 @@ class Clip(models.Model):
         ('es', 'Español'),
         ('en', 'Inglés'),
         ('fr', 'Francés'),
-        # Agrega más idiomas según sea necesario
+        # Agregar más idiomas según sea necesario
     ]
     language = models.CharField(max_length=50, choices=LANGUAGE_CHOICES)
     from_twitch = models.BooleanField(default=True)  # True si fue extraído automáticamente
@@ -39,17 +39,18 @@ class ClipVote(models.Model):
     def __str__(self):
         return f'Vote by {self.user.username} on {self.clip.title}'
 
-class Comment(models.Model):
+class Comment(models.Model):  # Es una buena práctica utilizar el plural para nombres de modelos
     clip = models.ForeignKey(Clip, on_delete=models.CASCADE, related_name='comments')
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    content = models.TextField()
+    text = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         indexes = [
-            models.Index(fields=['created_at']),  # Mejora en las consultas ordenadas por fecha
+            models.Index(fields=['created_at']),
         ]
 
     def __str__(self):
-        return f'Comment by {self.user.username} on {self.clip.title}: {self.content[:20]}...'
+        return f'Comment by {self.user.username} on {self.clip.title}: {self.text[:20]}...'
+
 
