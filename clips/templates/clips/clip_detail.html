@@ -21,10 +21,11 @@
     </style>
 </head>
 <body>
+    <a class="navbar-brand" href="/clips/">PopularClips</a>
     <div class="container mt-5">
         <div class="video-container">
             <h1>{{ clip.title }}</h1>
-            <!-- Usar un iframe para incrustar el clip -->
+            <!-- Usar un iframe para incrustar el clip (cambiar localhost por tu dominio) -->
             <iframe
                 src="{{ clip.url }}&parent=localhost"
                 height="480"

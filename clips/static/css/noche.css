@@ -1,65 +1,33 @@
 /* noche.css */
-
-body {
-    background-color: #f8f9fa;  /* Color de fondo claro por defecto */
-    color: #212529;  /* Color de texto claro por defecto */
-    transition: background-color 0.3s, color 0.3s;
+body.night-mode {
+    background-color: #121212; /* Color de fondo oscuro */
+    color: #ffffff; /* Color de texto claro */
 }
 
-.card {
-    background-color: white;  /* Fondo blanco para las tarjetas */
-    color: #212529;  /* Texto oscuro para las tarjetas */
+body.night-mode .navbar {
+    background-color: #1a1a1a; /* Color de fondo de la barra de navegación */
 }
 
-.navbar, .btn {
-    transition: background-color 0.3s, color 0.3s;
+body.night-mode .card {
+    background-color: #1e1e1e; /* Color de fondo de las tarjetas */
+    border: 1px solid #333; /* Borde de las tarjetas */
 }
 
-/* Estilos para el modo noche */
-.night-mode body {
-    background-color: #1c1c1c;  /* Color de fondo oscuro */
-    color: #f8f9fa;  /* Color de texto claro */
+body.night-mode .btn-primary {
+    background-color: #007bff; /* Color de fondo del botón primario */
+    border-color: #007bff; /* Borde del botón primario */
 }
 
-.night-mode .navbar, .night-mode .btn {
-    background-color: #333;  /* Fondo oscuro para la barra de navegación y botones */
-    color: #f8f9fa;  /* Texto claro para la barra de navegación y botones */
+body.night-mode .btn-secondary {
+    background-color: #6c757d; /* Color de fondo del botón secundario */
+    border-color: #6c757d; /* Borde del botón secundario */
 }
 
-.night-mode .card {
-    background-color: #333;  /* Fondo oscuro para las tarjetas en modo noche */
-    color: #f8f9fa;  /* Texto claro para las tarjetas en modo noche */
+/* Estilos para mejorar la visibilidad de los enlaces */
+body.night-mode a {
+    color: #61dafb; /* Color de los enlaces */
 }
 
-.night-mode .custom-select, 
-.night-mode .card-title, 
-.night-mode .card-text {
-    background-color: #444;  /* Fondo gris oscuro para elementos de selección y texto en tarjetas */
-    color: #f8f9fa;  /* Texto claro */
+body.night-mode .carousel-container {
+    box-shadow: 0px 4px 8px rgba(255, 255, 255, 0.1); /* Sombra suave para el carrusel */
 }
-
-.night-mode .form-control {
-    background-color: #555;  /* Fondo gris más oscuro para controles de formulario */
-    color: #f8f9fa;  /* Texto claro */
-}
-
-.embed-responsive {
-    position: relative;
-    display: block;
-    width: 100%;
-    padding: 0;
-    overflow: hidden;
-    padding-top: 56.25%;
-}
-
-.embed-responsive-item {
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    width: 100%;
-    height: 100%;
-    border: 0;
-}
-

@@ -1,21 +1,30 @@
-<!-- clips/templates/clips/streamer_clips.html -->
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <title>Clips de {{ streamer.name }}</title>
 </head>
 <body>
-    <h1>Clips de {{ streamer.name }}</h1>
-    <ul>
-        {% for clip in clips %}
-            <li>
-                <a href="{{ clip.url }}">{{ clip.title }}</a>
-                <p>Creado en: {{ clip.twitch_created_at }}</p>
-            </li>
-        {% endfor %}
-    </ul>
-    <a href="{% url 'clip_list' %}">Volver a la lista de clips</a>
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">Clips de {{ streamer.name }}</h1>
+        <ul class="list-group">
+            {% for clip in clips %}
+                <li class="list-group-item">
+                    <a href="{% url 'clip_detail' clip.id %}">{{ clip.title }}</a>
+                    <p><strong>Creado en:</strong> {{ clip.twitch_created_at|date:"D, d M Y H:i:s" }}</p>
+                </li>
+            {% empty %}
+                <li class="list-group-item">No hay clips disponibles para este streamer.</li>
+            {% endfor %}
+        </ul>
+        <a href="{% url 'clip_list' %}" class="btn btn-primary mt-4">Volver a la lista de clips</a>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
+

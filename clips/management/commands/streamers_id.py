@@ -59,7 +59,7 @@ class Command(BaseCommand):
         Función principal que orquesta la obtención del broadcaster_id.
         """
         access_token = self.get_access_token()
-        username = input("Mete el nombre del usuario que quieras su id: ")
+        username = input("Escribe el nombre del usuario que quieras su id: ")
 
         try:
             broadcaster_id = self.get_user_id(username, access_token)

@@ -39,7 +39,7 @@ class Command(BaseCommand):
         params = {
             'broadcaster_id': streamer.twitch_id,
             'first': 100,  # Aumentamos el número para obtener más clips
-            'started_at': (timezone.now() - timezone.timedelta(days=7)).isoformat(),
+            'started_at': (timezone.now() - timezone.timedelta(days=30)).isoformat(),
             'ended_at': timezone.now().isoformat(),
         }
 

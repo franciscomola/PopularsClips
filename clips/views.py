@@ -1,42 +1,51 @@
+# clips/views.py
 
-from django.shortcuts import render, get_object_or_404
-from .models import Clip, Comment, Streamer
+from django.views.generic import ListView, DetailView
+from django.views.generic.edit import FormMixin
+from .models import Clip, Streamer, Comment
+from django.urls import reverse
+from .forms import CommentForm
 
-def clip_list(request):
-    # Filtrado de clips por streamer
-    streamer_id = request.GET.get('streamer')
-    if streamer_id:
-        clips = Clip.objects.filter(streamer_id=streamer_id)
-    else:
-        clips = Clip.objects.all()
+class ClipListView(ListView):
+    model = Clip
+    template_name = 'clips/clip_list.html'
+    context_object_name = 'clips'
 
-    streamers = Streamer.objects.all()  # Obtener todos los streamers
+    
+    def get_queryset(self):
+        # Captura el streamer_id de los parámetros GET
+        streamer_id = self.request.GET.get('streamer')  # Cambiado a GET para URL
+        clips = super().get_queryset()
 
-    return render(request, 'clips/clip_list.html', {'clips': clips, 'streamers': streamers, 'request': request})
+        # Filtra los clips si se ha seleccionado un streamer
+        if streamer_id:
+            clips = clips.filter(streamer_id=streamer_id)
+        
+        return clips
 
-def streamer_clips(request, streamer_id):
-    """
-    Vista que muestra clips de un streamer específico.
-    """
-    try:
-        streamer = Streamer.objects.get(id=streamer_id)  # Obtener el streamer por su ID
-        clips = Clip.objects.filter(streamer=streamer)  # Obtener clips del streamer
-    except Streamer.DoesNotExist:
-        clips = []  # Si el streamer no existe, no hay clips
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['clips_data'] = list(self.get_queryset().values(
+            'id', 'title', 'url', 'thumbnail_url', 'twitch_created_at'
+        ))
+        context['streamers'] = Streamer.objects.all()
+        return context
+        
+# Vista para mostrar los detalles de un clip y manejar comentarios
 
-    return render(request, 'clips/streamer_clips.html', {'clips': clips, 'streamer': streamer})
+class ClipDetailView(FormMixin, DetailView):
+    model = Clip  # Modelo que se va a utilizar
+    template_name = 'clips/clip_detail.html'  # Plantilla que se va a utilizar
+    context_object_name = 'clip'  # Nombre del objeto en el contexto
+    form_class = CommentForm  # Formulario que se va a utilizar
 
+    def get_success_url(self):
+        # Redirigir a la misma página después de enviar un comentario
+        return reverse('clip_detail', kwargs={'pk': self.object.pk})
 
-def clip_detail(request, clip_id):
-    clip = get_object_or_404(Clip, id=clip_id)  # Obtiene el clip por ID
-    comments = Comment.objects.filter(clip=clip)  # Filtra los comentarios del clip
-
-    # Manejo del formulario para agregar un comentario
-    if request.method == 'POST':
-        comment_text = request.POST.get('comment')
-        if comment_text:  # Verifica que el comentario no esté vacío
-            Comment.objects.create(clip=clip, user=request.user.username, text=comment_text)
-
-    return render(request, 'clips/clip_detail.html', {'clip': clip, 'comments': comments})
-
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Añadir los comentarios al contexto
+        context['comments'] = Comment.objects.filter(clip=self.object)
+        return context
 

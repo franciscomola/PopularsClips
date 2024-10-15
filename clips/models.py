@@ -13,8 +13,9 @@ class Clip(models.Model):
     streamer = models.ForeignKey(Streamer, on_delete=models.CASCADE, related_name='clips')
     title = models.CharField(max_length=255)
     url = models.URLField()
+    thumbnail_url = models.URLField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)  # Fecha de creación en la base de datos
-    twitch_created_at = models.DateTimeField(null=False)  # Asegúrate de que sea `DateTimeField`
+    twitch_created_at = models.DateTimeField(null=False)
     LANGUAGE_CHOICES = [
         ('es', 'Español'),
         ('en', 'Inglés'),
@@ -39,7 +40,7 @@ class ClipVote(models.Model):
     def __str__(self):
         return f'Vote by {self.user.username} on {self.clip.title}'
 
-class Comment(models.Model):  # Es una buena práctica utilizar el plural para nombres de modelos
+class Comment(models.Model):  
     clip = models.ForeignKey(Clip, on_delete=models.CASCADE, related_name='comments')
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     text = models.TextField()

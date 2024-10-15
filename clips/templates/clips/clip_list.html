@@ -4,46 +4,61 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lista de Clips</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     {% load static %}
-    <!-- Incluir el archivo noche.css -->
     <link rel="stylesheet" href="{% static 'css/noche.css' %}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="#">PopularClips</a>
+        <a class="navbar-brand" href="/clips/">PopularClips</a>
         <button id="toggle-mode" class="btn btn-dark ml-auto">Modo Noche</button>
     </nav>
 
     <div class="container mt-5">
         <h1 class="text-center mb-4">Lista de Clips</h1>
 
-        <!-- Filtro por streamer -->
+        <div id="carousel" class="mb-5 text-center">
+            <button id="prev-clip" class="btn btn-secondary" style="margin-right: 10px;">
+                Anterior
+            </button>
+
+            <div class="carousel-container" style="display: inline-block; position: relative;">
+                <iframe id="carousel-clip" src="" allowfullscreen style="
+                    width: 720px;  /* Ancho más largo */
+                    height: 450px;  /* Alto más corto */
+                    border: none;
+                    border-radius: 20px;  /* Bordes redondeados */
+                    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave */
+                    transition: opacity 0.5s ease;
+                "></iframe>
+            </div>
+
+            <button id="next-clip" class="btn btn-secondary" style="margin-left: 10px;">
+                Siguiente
+            </button>
+        </div>
+
         <div class="mb-4">
             <form method="GET" action="{% url 'clip_list' %}">
-                <div class="input-group">
-                    <select name="streamer" class="custom-select" onchange="this.form.submit()">
-                        <option value="">Todos los clips</option>
-                        {% for streamer in streamers %}
-                            <option value="{{ streamer.id }}" {% if request.GET.streamer == streamer.id|stringformat:"d" %}selected{% endif %}>{{ streamer.name }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
+                <select name="streamer" class="custom-select" onchange="this.form.submit()">
+                    <option value="">Todos los clips</option>
+                    {% for streamer in streamers %}
+                        <option value="{{ streamer.id }}" {% if request.GET.streamer == streamer.id|stringformat:"d" %}selected{% endif %}>{{ streamer.name }}</option>
+                    {% endfor %}
+                </select>
             </form>
         </div>
 
-        <!-- Tarjetas de clips -->
-        <div class="row">
+        <div id="clip-container" class="row">
             {% for clip in clips %}
-                <div class="col-md-4 mb-4">
+                <div class="col-md-4 mb-4 clip" style="display: none;">
                     <div class="card">
-                        <!-- Vista previa del clip -->
                         <div class="embed-responsive embed-responsive-16by9 mb-2">
-                            <iframe class="embed-responsive-item" src="{{ clip.url }}&parent=localhost" allowfullscreen></iframe>
+                            <iframe class="embed-responsive-item lazy-iframe" data-src="{{ clip.url }}&parent=localhost" allowfullscreen></iframe>
                         </div>
                         <div class="card-body">
                             <h5 class="card-title">{{ clip.title }}</h5>
-                            <p class="card-text">Streamer: <a href="{% url 'streamer_clips' clip.streamer.id %}">{{ clip.streamer.name }}</a></p>
+                            <p class="card-text">Streamer: <a href="{% url 'clip_list' %}?streamer={{ clip.streamer.id }}">{{ clip.streamer.name }}</a></p>
                             <a href="{% url 'clip_detail' clip.id %}" class="btn btn-primary">Detalles</a>
                         </div>
                     </div>
@@ -52,20 +67,109 @@
                 <p>No hay clips disponibles.</p>
             {% endfor %}
         </div>
+
+        <div id="mostrar-mas-container" class="text-center mt-4">
+            <button id="mostrar-mas" class="btn btn-primary">Mostrar más</button>
+        </div>
+
+        <div id="scroll-up-container" class="text-center mt-4" style="display: none;">
+            <button id="scroll-up" class="btn btn-secondary">Subir</button>
+        </div>
     </div>
 
-    <!-- Enlace a Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-    <!-- Script para alternar el modo noche -->
     <script>
-        document.getElementById('toggle-mode').addEventListener('click', function() {
-            document.body.classList.toggle('night-mode');
-            this.textContent = document.body.classList.contains('night-mode') ? 'Modo Día' : 'Modo Noche';
+        document.addEventListener("DOMContentLoaded", function() {
+            // Modo nocturno
+            document.getElementById('toggle-mode').addEventListener('click', function() {
+                document.body.classList.toggle('night-mode');
+                this.textContent = document.body.classList.contains('night-mode') ? 'Modo Día' : 'Modo Noche';
+            });
+
+            // Clips aleatorios para el carrusel
+            var clips = [
+                {% for clip in clips %}
+                    "{{ clip.url }}&parent=localhost&autoplay=1"{% if not loop.last %},{% endif %}
+                {% endfor %}
+            ];
+
+            var currentClipIndex = 0;
+
+            function mostrarClipActual() {
+                var iframe = document.getElementById('carousel-clip');
+                iframe.src = clips[currentClipIndex];
+            }
+
+            function clipAleatorio() {
+                currentClipIndex = Math.floor(Math.random() * clips.length); // Selección aleatoria de un clip
+                mostrarClipActual();
+            }
+
+            window.onload = function() {
+                mostrarClipActual();
+                mostrarClips();
+            };
+
+            document.getElementById('prev-clip').addEventListener('click', function() {
+                currentClipIndex = (currentClipIndex - 1 + clips.length) % clips.length;
+                mostrarClipActual();
+            });
+
+            document.getElementById('next-clip').addEventListener('click', function() {
+                clipAleatorio(); // Mostrar un clip aleatorio
+            });
+
+            var clipsAMostrar = 0;
+            var incrementoClips = 3;
+
+            function mostrarClips() {
+                var clips = document.querySelectorAll('.clip');
+                for (var i = 0; i < clipsAMostrar && i < clips.length; i++) {
+                    clips[i].style.display = 'block';
+                }
+
+                if (clipsAMostrar >= clips.length) {
+                    document.getElementById('mostrar-mas-container').style.display = 'none';
+                    document.getElementById('scroll-up-container').style.display = 'block';
+                }
+            }
+
+            document.getElementById('mostrar-mas').addEventListener('click', function() {
+                clipsAMostrar += incrementoClips;
+                mostrarClips();
+            });
+
+            document.getElementById('scroll-up').addEventListener('click', function() {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+
+            var lazyIframes = [].slice.call(document.querySelectorAll("iframe.lazy-iframe"));
+            if ("IntersectionObserver" in window) {
+                let iframeObserver = new IntersectionObserver(function(entries) {
+                    entries.forEach(function(entry) {
+                        if (entry.isIntersecting) {
+                            let iframe = entry.target;
+                            iframe.src = iframe.dataset.src;
+                            iframe.classList.remove("lazy-iframe");
+                            iframeObserver.unobserve(iframe);
+                        }
+                    });
+                });
+
+                lazyIframes.forEach(function(iframe) {
+                    iframeObserver.observe(iframe);
+                });
+            } else {
+                lazyIframes.forEach(function(iframe) {
+                    iframe.src = iframe.dataset.src;
+                });
+            }
         });
     </script>
+
 </body>
 </html>
 
