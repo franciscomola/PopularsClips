@@ -22,5 +22,5 @@ from django.urls import path, include  # Asegúrate de que 'include' esté impor
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('clips/', include('clips.urls')),  # Incluir las URLs de la aplicación clips
+    path('accounts/', include('django.contrib.auth.urls')),  # Agrega las rutas de login/logout
 ]
-

@@ -4,30 +4,138 @@ body.night-mode {
     color: #ffffff; /* Color de texto claro */
 }
 
+/* Barra de navegación en modo noche */
 body.night-mode .navbar {
-    background-color: #1a1a1a; /* Color de fondo de la barra de navegación */
+    background-color: #121212;
 }
 
-body.night-mode .card {
-    background-color: #1e1e1e; /* Color de fondo de las tarjetas */
-    border: 1px solid #333; /* Borde de las tarjetas */
+
+body.night-mode .navbar .btn {
+    color: #f3f3f3; /* Color del texto en los botones de la barra de navegación */
+    border-color: #1d1c1c; /* Borde de los botones */
 }
 
+body.night-mode .navbar .btn:hover {
+    background-color: #333; /* Fondo más oscuro en hover */
+    border-color: #ffffff;
+}
+
+/* Botones en modo noche */
+/* Botón primario */
 body.night-mode .btn-primary {
-    background-color: #007bff; /* Color de fondo del botón primario */
-    border-color: #007bff; /* Borde del botón primario */
+    background-color: #8f15c0; /* Nuevo color de fondo (azul claro) */
+    border-color: #8f15c0;
 }
 
+body.night-mode .btn-primary:hover {
+    background-color: #460062; /* Color más oscuro al hacer hover */
+    border-color: #460062;
+}
+
+/* Botón secundario */
 body.night-mode .btn-secondary {
-    background-color: #6c757d; /* Color de fondo del botón secundario */
-    border-color: #6c757d; /* Borde del botón secundario */
+    background-color: #6a5acd; /* Nuevo color de fondo (morado) */
+    border-color: #6a5acd;
 }
 
-/* Estilos para mejorar la visibilidad de los enlaces */
+body.night-mode .btn-secondary:hover {
+    background-color: #5b4bb2; /* Color más oscuro al hacer hover */
+    border-color: #5b4bb2;
+}
+
+/* Botón de éxito */
+body.night-mode .btn-success {
+    background-color: #28a745; /* Nuevo color de fondo (verde) */
+    border-color: #28a745;
+}
+
+body.night-mode .btn-success:hover {
+    background-color: #218838; /* Color más oscuro al hacer hover */
+    border-color: #218838;
+}
+
+/* Botón de peligro */
+body.night-mode .btn-danger {
+    background-color: #dc3545; /* Nuevo color de fondo (rojo) */
+    border-color: #dc3545;
+}
+
+body.night-mode .btn-danger:hover {
+    background-color: #c82333; /* Color más oscuro al hacer hover */
+    border-color: #c82333;
+}
+
+/* Botón de advertencia */
+body.night-mode .btn-warning {
+    background-color: #ffc107; /* Nuevo color de fondo (amarillo) */
+    border-color: #ffc107;
+}
+
+body.night-mode .btn-warning:hover {
+    background-color: #e0a800; /* Color más oscuro al hacer hover */
+    border-color: #e0a800;
+}
+
+
+
+/* Estilos para enlaces */
 body.night-mode a {
-    color: #61dafb; /* Color de los enlaces */
+    color: #ffffff; /* Color de los enlaces */
 }
 
-body.night-mode .carousel-container {
-    box-shadow: 0px 4px 8px rgba(255, 255, 255, 0.1); /* Sombra suave para el carrusel */
+
+body.night-mode a:hover {
+    color: #652a73;
 }
+
+body.night-mode .btn-info {
+    background-color: #8f15c0; /* Nuevo color de fondo (azul claro) */
+    border-color: #8f15c0;
+  }
+  body.night-mode .btn-info:hover {
+    background-color: #460062; /* Nuevo color de fondo (azul claro) */
+    border-color: #460062;
+  }
+/* Estilos de las tarjetas (cards) */
+body.night-mode .card {
+    background-color: #1e1e1e; /* Fondo de las tarjetas */
+    border: 1px solid #333; /* Borde de las tarjetas */
+    box-shadow: 0px 4px 10px rgba(255, 255, 255, 0.1); /* Sombra sutil */
+}
+
+
+
+/* Formularios y campos de texto en modo noche */
+body.night-mode input, 
+body.night-mode textarea {
+    background-color: #333; /* Fondo oscuro para campos de entrada */
+    color: #ffffff; /* Texto claro */
+    border: 1px solid #555; /* Bordes oscuros */
+}
+
+body.night-mode input::placeholder, 
+body.night-mode textarea::placeholder {
+    color: #888; /* Placeholder en gris tenue */
+}
+/* Estilo para el botón en modo noche */
+body.night-mode #toggle-mode {
+    background-color: #8f15c0; /* Color púrpura característico */
+    color: white; /* Texto blanco */
+    border: 1px solid #8f15c0; /* Borde púrpura */
+}
+
+/* Cambiar el color cuando se hace hover en modo noche */
+body.night-mode #toggle-mode:hover {
+    background-color: #460062; /* Color púrpura más oscuro */
+    color: white; /* Texto blanco */
+}
+
+body.night-mode .custom-select {
+
+    color: #ffffff;
+    background: #8f15c0 url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='4' height='5' viewBox='0 0 4 5'%3e%3cpath fill='%23343a40' d='M2 0L0 2h4zm0 5L0 3h4z'/%3e%3c/svg%3e") no-repeat right .75rem center/8px 10px;
+    border: 1px solid #323232;
+
+  }
+
+  

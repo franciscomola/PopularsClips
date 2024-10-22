@@ -1,0 +1,50 @@
+
+body {
+    background-color: #080808; /* Fondo claro por defecto */
+    font-family: Arial, sans-serif;
+}
+
+/* Estilo Navbar similar a Twitch */
+.navbar {
+    background-color: #9147ff; /* Color púrpura de Twitch */
+}
+        
+.navbar-brand {
+    color: white;
+    font-size: 1.5rem;
+}
+       
+.navbar-brand:hover {
+    color: #4a1658;
+}
+/*boton login */
+a.btn-outline-primary {
+    color: #ffffff;
+    border-color: #4bfe3a;
+}
+
+a.btn-outline-primary:hover {
+    color: #ffffff;
+    background-color:#4bfe3a;
+    border-color: #4bfe3a;
+}
+/*boton register */
+a.btn-outline-success {
+    color: #ffffff;
+    border-color: #ff0000;
+}
+a.btn-outline-success:hover {
+    color: #fefefe;
+    background-color:#ff0000;
+    border-color: #ff0000;
+}
+
+a.btn-outline-primary.ml-2 {
+    color: #ffffff;
+    border-color: #3140db;
+}
+a.btn-outline-primary.ml-2:hover {
+    color: #ffffff;
+    background-color:#3140db;
+    border-color: #3140db;
+}
