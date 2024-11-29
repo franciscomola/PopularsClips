@@ -1,0 +1,305 @@
+/* Estilos existentes */
+body.night-mode {
+    background-color: #121212;
+    color: #ffffff;
+}
+
+.navbar {
+    background-color: #a551ab;
+    color: #ffffff;
+}
+
+.navbar-brand {
+    color: #f8f9fa;
+}
+
+.navbar a {
+    color: #ffffff;
+}
+
+/* General */
+
+/* Redimensionamiento dinámico de bloques */
+.block {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+.flex-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 0 50px; /* Agrega más espacio a los lados */
+}
+
+.flex-column {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Columnas */
+.col {
+    flex: 1;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.col-md-3, .col-md-6 {
+    padding: 10px;
+}
+
+.col-md-3 {
+    flex: 0 0 25%;
+    max-width: 25%;
+}
+
+.col-md-6 {
+    flex: 0 0 50%;
+    max-width: 50%;
+}
+
+/* Carrusel */
+#carousel {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.carousel-container {
+    display: flex;
+    position: relative;
+    width: calc(100% - 150px);
+}
+
+/* Ajustes definitivos para el carrusel */
+.carousel-container {
+    width: 100%; /* Ocupa todo el ancho disponible */
+    max-width: 1700px; /* Limita el tamaño máximo en pantallas grandes */
+    height: auto; /* Permite un ajuste dinámico de la altura */
+    margin: 0 auto; /* Centrado horizontal */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 40px; /* Mayor separación entre el carrusel y los bloques laterales */
+}
+
+#carousel-clip {
+    width: 70%; /* Aumenta el tamaño del carrusel */
+    max-height: 1400px; /* Ajusta este valor según tu preferencia */
+    height: 800px; /* Altura fija */
+    border: none;
+    border-radius: 20px; /* Mantiene las esquinas redondeadas */
+    object-fit: fill; /* Hace que el contenido del iframe ocupe todo el espacio */
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+    transition: opacity 0.5s ease;
+}
+
+@media (max-width: 768px) {
+    #carousel-clip {
+        height: 500px; /* Reduce la altura en pantallas más pequeñas */
+    }
+}
+
+@media (max-width: 480px) {
+    #carousel-clip {
+        height: 350px; /* Ajusta para móviles */
+    }
+}
+
+/* Botones */
+button {
+    cursor: pointer;
+}
+
+.btn {
+    padding: 10px 15px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 0; /* Diseño sin bordes redondeados */
+}
+
+.btn-primary {
+    background-color: #007bff;
+    color: white;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    color: white;
+}
+
+.btn-info {
+    background-color: #17a2b8;
+    color: white;
+}
+
+.btn:hover {
+    transform: scale(1.05);
+    transition: transform 0.2s ease-in-out;
+}
+
+/* Listas */
+.ranking-list, .faq-list, .latest-clips {
+    list-style: none;
+    padding: 0;
+}
+
+.ranking-list li, .faq-list li, .latest-clips li {
+    margin: 10px 0;
+}
+
+/* Filtros */
+.custom-select {
+    width: auto;
+    display: inline-block;
+    margin-right: 10px;
+    padding: 5px;
+}
+
+/* Nocturno */
+.night-mode {
+    background-color: #121212;
+    color: #f0f0f0;
+}
+
+.night-mode .btn-primary,
+.night-mode .btn-secondary,
+.night-mode .btn-info {
+    background-color: #333;
+    color: #f0f0f0;
+}
+
+/* Tarjetas de clips */
+.card {
+    border: 1px solid #ddd;
+    border-radius: 0; /* Sin bordes redondeados */
+    overflow: hidden;
+    transition: box-shadow 0.3s ease;
+}
+
+.card:hover {
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.card-title {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+}
+
+.card-text {
+    font-size: 0.9rem;
+    color: #666;
+}
+
+/* Contenedores */
+#clip-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: stretch;
+    width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+.clip {
+    display: none;
+    flex: 1 1 auto;
+    min-width: 300px;
+    max-width: 33.333%; /* Ajuste dinámico para filas */
+    height: auto;
+}
+
+@media (min-width: 768px) {
+    .clip {
+        display: block;
+        flex: 0 0 33.3333%;
+        max-width: 33.3333%;
+    }
+}
+
+@media (max-width: 768px) {
+    .clip {
+        display: block;
+        flex: 0 0 100%;
+        max-width: 100%; /* Ocupa todo el ancho en móviles */
+    }
+}
+
+/* Ajustes para el bloque inferior */
+#footer-block {
+    width: 100%;
+    height: auto;
+    padding: 20px;
+    background-color: #f8f9fa;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0px -4px 6px rgba(0, 0, 0, 0.1);
+    border-top: 1px solid #ddd;
+}
+
+@media (max-width: 768px) {
+    #footer-block {
+        flex-direction: column;
+        padding: 10px;
+    }
+}
+
+#mostrar-mas-container, #scroll-up-container {
+    margin: 20px 0;
+    text-align: center;
+}
+
+.clip-thumbnail {
+    max-width: 100px;
+    max-height: 60px;
+    margin-right: 10px;
+    transition: transform 0.3s ease;
+}
+
+.clip-thumbnail:hover {
+    transform: scale(1.1);
+}
+
+/* Nuevos Ajustes para los tres bloques de arriba */
+.flex-container {
+    padding: 0 50px; /* Más espacio a los lados */
+}
+
+.block-side {
+    flex: 0 0 25%; /* Bloques laterales ocupan el 25% del ancho */
+    margin: 0 20px; /* Aumenta la separación entre bloques laterales */
+}
+
+.carousel-container {
+    width: 100%;
+    max-width: 1700px; /* Ajusta el tamaño máximo del carrusel */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 40px; /* Espacio entre el carrusel y los bloques */
+}
+
+#carousel-clip {
+    width: 70%; /* Aumenta el tamaño del carrusel */
+    height: 800px;
+    border: none;
+    border-radius: 20px;
+    object-fit: fill;
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+@media (max-width: 768px) {
+    #carousel-clip {
+        height: 500px;
+    }
+}
+
+@media (max-width: 480px) {
+    #carousel-clip {
+        height: 350px;
+    }
+}

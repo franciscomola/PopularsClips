@@ -1,33 +1,223 @@
-/* noche.css */
+/* Modo noche */
 body.night-mode {
-    background-color: #121212; /* Color de fondo oscuro */
-    color: #ffffff; /* Color de texto claro */
+    background-color: #121212;
+    color: #ffffff;
 }
 
+/* Barra de navegación */
 body.night-mode .navbar {
-    background-color: #1a1a1a; /* Color de fondo de la barra de navegación */
+    background-color: #121212;
 }
 
-body.night-mode .card {
-    background-color: #1e1e1e; /* Color de fondo de las tarjetas */
-    border: 1px solid #333; /* Borde de las tarjetas */
+body.night-mode .navbar .btn {
+    color: #000000;
+    border-color: #1d1c1c;
 }
 
+body.night-mode .navbar .btn:hover {
+    background-color: #333;
+    border-color: #ffffff;
+}
+
+/* Botones */
 body.night-mode .btn-primary {
-    background-color: #007bff; /* Color de fondo del botón primario */
-    border-color: #007bff; /* Borde del botón primario */
+    background-color: #a258bf;
+    border-color: #a258bf;
+}
+
+body.night-mode .btn-primary:hover {
+    background-color: #460062;
+    color: white;
 }
 
 body.night-mode .btn-secondary {
-    background-color: #6c757d; /* Color de fondo del botón secundario */
-    border-color: #6c757d; /* Borde del botón secundario */
+    background-color: #6a5acd;
+    border-color: #6a5acd;
 }
 
-/* Estilos para mejorar la visibilidad de los enlaces */
+body.night-mode .btn-secondary:hover {
+    background-color: #5b4bb2;
+    border-color: #5b4bb2;
+}
+
+body.night-mode .btn-success {
+    background-color: #28a745;
+    border-color: #28a745;
+}
+
+body.night-mode .btn-success:hover {
+    background-color: #218838;
+    border-color: #218838;
+}
+
+body.night-mode .btn-danger {
+    background-color: #dc3545;
+    border-color: #dc3545;
+}
+
+body.night-mode .btn-danger:hover {
+    background-color: #c82333;
+    border-color: #c82333;
+}
+
+body.night-mode .btn-warning {
+    background-color: #ffc107;
+    border-color: #ffc107;
+}
+
+body.night-mode .btn-warning:hover {
+    background-color: #e0a800;
+    border-color: #e0a800;
+}
+
+body.night-mode .btn-info {
+    background-color: #a258bf;
+    border-color: #a258bf;
+}
+
+body.night-mode .btn-info:hover {
+    background-color: #460062;
+    border-color: #460062;
+}
+
+/* Enlaces */
 body.night-mode a {
-    color: #61dafb; /* Color de los enlaces */
+    color: #ffffff;
 }
 
-body.night-mode .carousel-container {
-    box-shadow: 0px 4px 8px rgba(255, 255, 255, 0.1); /* Sombra suave para el carrusel */
+body.night-mode a:hover {
+    color: #652a73;
+}
+
+/* Tarjetas (cards) */
+body.night-mode .card {
+    background-color: #1e1e1e;
+    border: 1px solid #333;
+    box-shadow: 0px 4px 10px rgba(255, 255, 255, 0.1);
+}
+
+/* Formularios y campos de texto */
+body.night-mode input,
+body.night-mode textarea {
+    background-color: #333;
+    color: #ffffff;
+    border: 1px solid #555;
+}
+
+body.night-mode input::placeholder,
+body.night-mode textarea::placeholder {
+    color: #888;
+}
+
+body.night-mode .custom-select {
+    color: #ffffff;
+    background: #a258bf url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='4' height='5' viewBox='0 0 4 5'%3e%3cpath fill='%23343a40' d='M2 0L0 2h4zm0 5L0 3h4z'/%3e%3c/svg%3e") no-repeat right .75rem center/8px 10px;
+    border: 1px solid #323232;
+}
+
+/* Botón de modo noche */
+body.night-mode #toggle-mode {
+    background-color: #a258bf;
+    color: white;
+    border: 1px solid #a258bf;
+}
+
+body.night-mode #toggle-mode:hover {
+    background-color: #460062;
+    color: white;
+}
+
+/* Menú contextual */
+body.night-mode .custom-menu {
+    background-color: #2c2c2c;
+    border: 1px solid #212121;
+}
+
+body.night-mode .custom-menu-item {
+    color: #b7b7b7;
+}
+
+body.night-mode .custom-menu-item:hover {
+    background-color: #82437b;
+}
+
+/* Dropdown */
+body.night-mode .dropdown-item {
+    color: #a258bf;
+}
+
+body.night-mode .dropdown-menu {
+    background-color: #1d1c1c;
+}
+
+/* Ranking */
+body.night-mode .ranking-small {
+    border: 1px solid #ddd;
+    padding: 15px;
+    border-radius: 5px;
+    background-color: #432c49;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilos para mensajes del tour */
+body.night-mode .popup {
+    background-color: rgba(0, 0, 0, 0.9);
+    color: #f0f0f0;
+    border: 2px solid #444;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.6);
+    padding: 15px;
+    border-radius: 8px;
+}
+
+/* Redimensionar columnas */
+.container, .row, .col-md-3, .col-md-6, .col-md-4 {
+    display: flex;
+    flex-wrap: wrap;
+    flex-grow: 1;
+}
+
+.col-md-3 {
+    flex-basis: 25%;
+    max-width: 25%;
+}
+
+.col-md-6 {
+    flex-basis: 50%;
+    max-width: 50%;
+}
+
+.col-md-4 {
+    flex-basis: 33.33%;
+    max-width: 33.33%;
+}
+
+.col-md-3.resizable, .col-md-6.resizable, .col-md-4.resizable {
+    resize: both;
+    overflow: auto;
+    min-height: 100px;
+}
+
+/* CSS para el modo noche */
+.night-mode .introjs-tooltip {
+    background-color: #333 !important;  /* Color de fondo oscuro para el tooltip */
+    color: white !important;            /* Color del texto en blanco */
+    border: 2px solid #fff !important;  /* Borde blanco para los tooltips */
+}
+
+.night-mode .introjs-helperLayer {
+    background-color: rgba(0, 0, 0, 0.8) !important;  /* Fondo oscuro para el overlay */
+}
+
+.night-mode .introjs-arrow {
+    border-color: #333 !important;  /* Flecha del tooltip de color oscuro */
+}
+
+.night-mode .introjs-button {
+    background-color: #444 !important; /* Botón de acción en color oscuro */
+    color: white !important;            /* Texto del botón en blanco */
+}
+
+/* Si deseas un color diferente para los títulos de los pasos */
+.night-mode .introjs-tooltiptext {
+    font-weight: bold;
 }

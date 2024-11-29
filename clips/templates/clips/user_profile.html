@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block title %}Perfil del usuario{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Perfil de {{ user.username }}</h2>
+    <p>Bienvenido, {{ user.username }}. Aquí puedes ver y editar tu perfil.</p>
+</div>
+{% endblock %}
+

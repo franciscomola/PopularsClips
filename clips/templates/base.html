@@ -3,42 +3,71 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Clips App{% endblock %}</title>
-    <!-- Cargar etiquetas estáticas -->
+    <title>{% block title %}PopularClips{% endblock %}</title>
     {% load static %}
-    <!-- Bootstrap CSS -->
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Estilos personalizados -->
-    <link href="{% static 'css/styles.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/noche.css' %}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="icon" href="{% static 'favicon_retro_round_t.ico' %}" type="image/x-icon">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link href="https://cdn.jsdelivr.net/npm/intro.js/minified/introjs.min.css" rel="stylesheet">
+	<script src="https://cdn.jsdelivr.net/npm/intro.js/minified/intro.min.js"></script>
 </head>
 <body>
-
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="{% url 'clip_list' %}">PopularsClips</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+    <nav class="navbar navbar-expand-lg">
+        <a class="navbar-brand" href="{% url 'clip_list' %}">PopularClips</a>
+        {% if request.resolver_match.url_name == 'clip_list' %}
+            <button id="help-tour" class="btn btn-info ml-2" onclick="reiniciarTour()">Ayuda</button>
+        {% endif %}
+        <div class="ml-auto">
+            <button id="toggle-mode" class="btn btn-dark">Modo Noche</button>
+            {% if user.is_authenticated %}
+                <a href="{% url 'logout' %}" class="btn btn-outline-danger ml-2">Cerrar Sesión</a>
+                <a href="{% url 'user_settings' %}" class="btn btn-outline-primary ml-2">{{ user.username }}</a>
+            {% else %}
+                <a href="{% url 'login' %}" class="btn btn-outline-primary ml-2">Iniciar Sesión</a>
+                <a href="{% url 'register' %}" class="btn btn-outline-success ml-2">Registrarse</a>
+            {% endif %}
+        </div>
     </nav>
 
-    <!-- Main content -->
-    <div class="container mt-4">
+    <div class="container mt-4 "style="margin-left: 20px;margin-right: 0px;">
         {% block content %}
-        <!-- Aquí se insertará el contenido específico de cada página -->
+        <div class="row">
+            <div class="col-12">
+                {% block content_main %}
+                {% endblock %}
+            </div>
+        </div>
         {% endblock %}
     </div>
 
-    <!-- Footer -->
-    <footer class="footer mt-auto py-3 bg-light">
-        <div class="container text-center">
-            <span class="text-muted">© 2024 PopularsClips</span>
-        </div>
-    </footer>
 
-    <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", 
+        function() {
+            const toggleButton = document.getElementById("toggle-mode");
+            const body = document.body;
+    
+            // Verificar si el modo noche está guardado en localStorage
+            if (localStorage.getItem("nightMode") === "enabled") {
+                body.classList.add("night-mode");
+            }
+    
+            // Escuchar el clic en el botón de modo noche
+            toggleButton.addEventListener("click", function() {
+                body.classList.toggle("night-mode");
+    
+                // Guardar la preferencia en localStorage
+                if (body.classList.contains("night-mode")) {
+                    localStorage.setItem("nightMode", "enabled");
+                } else {
+                    localStorage.removeItem("nightMode");
+                }
+            });
+        });
+    </script>
 </body>
 </html>
-

@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Ranking de Clips - PopularClips
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Ranking Total de Clips</h2>
+    <ol class="ranking-list">
+        {% for clip in ranking_clips %}
+            <li>
+                <a href="{% url 'clip_detail' clip.id %}">
+                    <h5>{{ clip.title }}</h5>
+                </a>
+                <p>{{ clip.vote_score }} votos - Subido por {{ clip.streamer.name }}</p>
+            </li>
+        {% endfor %}
+    </ol>
+</div>
+{% endblock %}

@@ -15,7 +15,6 @@ import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
@@ -25,7 +24,7 @@ SECRET_KEY = 'django-insecure-hfwx$ljjr6e&0r##g2h*-u@qd=+_8pfzjvtio^b+i54upgtb(x
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -37,10 +36,20 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_extensions',
+    'django_filters',
     'clips',
+    'rest_framework',
+    'csp',	
+    'livereload',
 ]
 
+REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
+}
+
 MIDDLEWARE = [
+#    'csp.middleware.CSPMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -55,7 +64,7 @@ ROOT_URLCONF = 'popularclips.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -117,7 +126,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'clips/static')]
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'clips/static'),
+    os.path.join(BASE_DIR, 'popularclips/ico'), 
+]
+
 
     # Otros directorios de archivos estáticos si los tienes
 
@@ -126,3 +139,31 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'clips/static')]
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+LOGIN_REDIRECT_URL = '/clips/'  # Redirige a la página principal de clips
+LOGOUT_REDIRECT_URL = '/clips/'  # Redirige a la página principal de clips
+
+
+CSP_DEFAULT_SRC = ("'self'",)
+CSP_SCRIPT_SRC = (
+    "'self'", 
+    "https://ajax.googleapis.com",
+    "https://cdnjs.cloudflare.com",
+    "https://code.jquery.com",
+    "https://stackpath.bootstrapcdn.com"  # Si usas Bootstrap
+)
+CSP_STYLE_SRC = (
+    "'self'",
+    "https://fonts.googleapis.com",
+    "https://stackpath.bootstrapcdn.com"  # Para Bootstrap
+)
+CSP_IMG_SRC = ("'self'", "data:", "https://your-image-source.com")
+CSP_FRAME_SRC = ("'self'", "https://clips.twitch.tv", "https://player.twitch.tv")
+
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://golden-civet-hip.ngrok-free.app',
+]
+
+NGROK_URL = "golden-civet-hip.ngrok-free.app"  # Cambia esto a tu URL para visualizar los clips
+

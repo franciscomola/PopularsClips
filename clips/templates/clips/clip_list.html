@@ -1,45 +1,81 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lista de Clips</title>
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'css/noche.css' %}">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-</head>
-<body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="/clips/">PopularClips</a>
-        <button id="toggle-mode" class="btn btn-dark ml-auto">Modo Noche</button>
-    </nav>
+{% extends 'base.html' %}
 
-    <div class="container mt-5">
-        <h1 class="text-center mb-4">Lista de Clips</h1>
+{% block title %}
+Lista de Clips - PopularClips
+{% endblock %}
+{% load static %}
 
-        <div id="carousel" class="mb-5 text-center">
-            <button id="prev-clip" class="btn btn-secondary" style="margin-right: 10px;">
-                Anterior
-            </button>
-
-            <div class="carousel-container" style="display: inline-block; position: relative;">
-                <iframe id="carousel-clip" src="" allowfullscreen style="
-                    width: 720px;  /* Ancho más largo */
-                    height: 450px;  /* Alto más corto */
-                    border: none;
-                    border-radius: 20px;  /* Bordes redondeados */
-                    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave */
-                    transition: opacity 0.5s ease;
-                "></iframe>
-            </div>
-
-            <button id="next-clip" class="btn btn-secondary" style="margin-left: 10px;">
-                Siguiente
-            </button>
+{% block content %}
+<div class="container mt-5">
+    <!-- Bloques principales -->
+    <div class="row">
+        <!-- Bloque Izquierdo: Ranking -->
+        <div class="col-md-2 ranking-block"style="
+        width: 230px;
+        padding-left: 0px;
+        padding-right: 0px;
+    ">
+            <h2 style="width: 200px;">Top 3 Clips Populares de la Semana</h2>
+            <a href="{% url 'clip_ranking' %}" class="btn btn-primary">Ver Ranking Total</a>
+            <ol class="ranking-list">
+                {% for clip in ranking_clips %}
+                    <li>
+                        <a href="{% url 'clip_detail' clip.id %}">{{ clip.title }}</a> - {{ clip.vote_score }} votos
+                    </li>
+                {% endfor %}
+            </ol>
         </div>
 
-        <div class="mb-4">
+        <!-- Bloque Central: Carrusel -->
+        <div class="col-md-8 carrusel-block">
+            <div id="carousel" class="text-center mb-4">
+                <button id="prev-clip" class="btn btn-secondary">
+                    <img src="{% static 'imagen/flecha-izquierda.png' %}" alt="Anterior" style="width: 60px; height: 35px;">
+                </button>
+                <div class="carousel-container" style="display: flex; position: relative;">
+                    <iframe id="carousel-clip" src="" allowfullscreen style="width: 600px;height: 350px;border: none;border-radius: 20px;box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);"></iframe>
+                </div>
+                <button id="next-clip" class="btn btn-secondary">
+                    <img src="{% static 'imagen/flecha-derecha.png' %}" alt="Siguiente" style="width: 60px; height: 35px;">
+                </button>
+            </div>
+        </div>
+
+        <!-- Bloque Derecho: FAQ -->
+        <div class="col-md-2 faq-block"style="left: 20px;">
+            <h3 style="width: 200px;">Preguntas Típicas </h3>
+            <ul class="faq-list">
+                <li><a href="#">¿Cómo puedo subir un clip?</a></li>
+                <li><a href="#">¿Qué es un ranking de clips?</a></li>
+                <li><a href="#">¿Cómo voto por un clip?</a></li>
+                
+            </ul>
+            <h3 style="width: 200px;">Últimos Clips Subidos</h3>
+            <ul class="latest-clips">
+                {% for clip in latest_clips %}
+                    <li>
+                        <a href="{% url 'clip_detail' clip.id %}">
+                            <img src="{{ clip.thumbnail_url }}" alt="{{ clip.title }}" class="clip-thumbnail">
+                            {{ clip.title }}
+                        </a>
+                    </li>
+                {% endfor %}
+                <h3>¿Necesitas Ayuda?</h3>
+                <p>Contáctanos o revisa nuestras preguntas frecuentes para más información.</p>
+                <a href="{% url 'contact_us' %}" class="btn btn-reiniciar">Contáctanos</a>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Bloque Inferior: Lista de Clips -->
+    <div class="clip-list-block mt-5">
+        <div class="filter-form mb-4">
             <form method="GET" action="{% url 'clip_list' %}">
+                <select name="order_by" id="order-select" class="custom-select" onchange="this.form.submit()">
+                    <option value="date" {% if request.GET.order_by == 'date' %}selected{% endif %}>Más recientes</option>
+                    <option value="popularity" {% if request.GET.order_by == 'popularity' %}selected{% endif %}>Más popular</option>
+                    <option value="language" {% if request.GET.order_by == 'language' %}selected{% endif %}>Idioma</option>
+                </select>
                 <select name="streamer" class="custom-select" onchange="this.form.submit()">
                     <option value="">Todos los clips</option>
                     {% for streamer in streamers %}
@@ -54,12 +90,12 @@
                 <div class="col-md-4 mb-4 clip" style="display: none;">
                     <div class="card">
                         <div class="embed-responsive embed-responsive-16by9 mb-2">
-                            <iframe class="embed-responsive-item lazy-iframe" data-src="{{ clip.url }}&parent=localhost" allowfullscreen></iframe>
+                            <iframe class="embed-responsive-item lazy-iframe" data-src="{{ clip.url }}&parent={{ ngrok_url }}" allowfullscreen></iframe>
                         </div>
                         <div class="card-body">
                             <h5 class="card-title">{{ clip.title }}</h5>
                             <p class="card-text">Streamer: <a href="{% url 'clip_list' %}?streamer={{ clip.streamer.id }}">{{ clip.streamer.name }}</a></p>
-                            <a href="{% url 'clip_detail' clip.id %}" class="btn btn-primary">Detalles</a>
+                            <a href="{% url 'clip_detail' clip.id %}" class="btn btn-primary">Visualízame</a>
                         </div>
                     </div>
                 </div>
@@ -71,105 +107,136 @@
         <div id="mostrar-mas-container" class="text-center mt-4">
             <button id="mostrar-mas" class="btn btn-primary">Mostrar más</button>
         </div>
-
         <div id="scroll-up-container" class="text-center mt-4" style="display: none;">
             <button id="scroll-up" class="btn btn-secondary">Subir</button>
         </div>
     </div>
+</div>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<!-- Scripts -->
+<script>
+    function iniciarTour() {
+        // Verifica si el usuario ya vio el tour
+        if (localStorage.getItem('tourVisto') !== 'true') {
+            introJs().setOptions({
+                steps: [
+                    {
+                        intro: "¡Bienvenido a PopularClips! Vamos a explorar las principales funciones de esta aplicación."
+                    },
+                    {
+                        element: document.querySelector('.ranking-list'),
+                        intro: "Aquí puedes ver los clips más populares de la semana. ¡Haz clic para ver más!"
+                    },
+                    {
+                        element: document.querySelector('#carousel'),
+                        intro: "Este es el carrusel. Haz clic en las flechas para ver clips aleatorios."
+                    },
+                    {
+                        element: document.querySelector('#order-select'),
+                        intro: "Usa este filtro para ordenar los clips según fecha, popularidad o idioma."
+                    },
+                    {
+                        element: document.querySelector('.btn-outline-primary'),
+                        intro: "Inicia sesión o regístrate para acceder a todas las funciones."
+                    }
+                ]
+            }).start();
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            // Modo nocturno
-            document.getElementById('toggle-mode').addEventListener('click', function() {
-                document.body.classList.toggle('night-mode');
-                this.textContent = document.body.classList.contains('night-mode') ? 'Modo Día' : 'Modo Noche';
-            });
+            // Marca que el tour ha sido visto
+            localStorage.setItem('tourVisto', 'true');
+        }
+    }
 
-            // Clips aleatorios para el carrusel
-            var clips = [
-                {% for clip in clips %}
-                    "{{ clip.url }}&parent=localhost&autoplay=1"{% if not loop.last %},{% endif %}
-                {% endfor %}
-            ];
+    // Llamar al tour en el botón "Empezar tour" o al cargar la página si es la primera vez
+    document.addEventListener("DOMContentLoaded", function() {
+        // Mostrar el tour solo si el usuario es nuevo o si se reinicia desde el botón
+        if (localStorage.getItem('tourVisto') !== 'true') {
+            iniciarTour();
+        }
+    });
 
-            var currentClipIndex = 0;
+    // Función para reiniciar el tour cuando el usuario lo solicite
+    function reiniciarTour() {
+        localStorage.removeItem('tourVisto');  // Elimina el registro de tour visto
+        iniciarTour();  // Muestra el tour nuevamente
+    }
 
-            function mostrarClipActual() {
-                var iframe = document.getElementById('carousel-clip');
-                iframe.src = clips[currentClipIndex];
-            }
+    // Configuración del carrusel de clips
+    var clips = [
+        {% for clip in clips %}
+            "{{ clip.url }}&parent={{ ngrok_url }}&autoplay=1"{% if not loop.last %},{% endif %}
+        {% endfor %}
+    ];
+    var currentClipIndex = 0;
 
-            function clipAleatorio() {
-                currentClipIndex = Math.floor(Math.random() * clips.length); // Selección aleatoria de un clip
-                mostrarClipActual();
-            }
+    function mostrarClipActual() {
+        var iframe = document.getElementById('carousel-clip');
+        iframe.src = clips[currentClipIndex];
+    }
 
-            window.onload = function() {
-                mostrarClipActual();
-                mostrarClips();
-            };
+    function clipAleatorio() {
+        currentClipIndex = Math.floor(Math.random() * clips.length);
+        mostrarClipActual();
+    }
 
-            document.getElementById('prev-clip').addEventListener('click', function() {
-                currentClipIndex = (currentClipIndex - 1 + clips.length) % clips.length;
-                mostrarClipActual();
-            });
+    window.onload = function() {
+        mostrarClipActual();
+        mostrarClips();
+    };
 
-            document.getElementById('next-clip').addEventListener('click', function() {
-                clipAleatorio(); // Mostrar un clip aleatorio
-            });
+    document.getElementById('prev-clip').addEventListener('click', function() {
+        currentClipIndex = (currentClipIndex - 1 + clips.length) % clips.length;
+        mostrarClipActual();
+    });
 
-            var clipsAMostrar = 0;
-            var incrementoClips = 3;
+    document.getElementById('next-clip').addEventListener('click', function() {
+        clipAleatorio();
+    });
 
-            function mostrarClips() {
-                var clips = document.querySelectorAll('.clip');
-                for (var i = 0; i < clipsAMostrar && i < clips.length; i++) {
-                    clips[i].style.display = 'block';
-                }
+    var clipsAMostrar = 3;
+    var incrementoClips = 3;
 
-                if (clipsAMostrar >= clips.length) {
-                    document.getElementById('mostrar-mas-container').style.display = 'none';
-                    document.getElementById('scroll-up-container').style.display = 'block';
-                }
-            }
+    function mostrarClips() {
+        var clips = document.querySelectorAll('.clip');
+        for (var i = 0; i < clipsAMostrar && i < clips.length; i++) {
+            clips[i].style.display = 'block';
+        }
 
-            document.getElementById('mostrar-mas').addEventListener('click', function() {
-                clipsAMostrar += incrementoClips;
-                mostrarClips();
-            });
+        if (clipsAMostrar >= clips.length) {
+            document.getElementById('mostrar-mas-container').style.display = 'none';
+            document.getElementById('scroll-up-container').style.display = 'block';
+        }
+    }
 
-            document.getElementById('scroll-up').addEventListener('click', function() {
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            });
+    document.getElementById('mostrar-mas').addEventListener('click', function() {
+        clipsAMostrar += incrementoClips;
+        mostrarClips();
+    });
 
-            var lazyIframes = [].slice.call(document.querySelectorAll("iframe.lazy-iframe"));
-            if ("IntersectionObserver" in window) {
-                let iframeObserver = new IntersectionObserver(function(entries) {
-                    entries.forEach(function(entry) {
-                        if (entry.isIntersecting) {
-                            let iframe = entry.target;
-                            iframe.src = iframe.dataset.src;
-                            iframe.classList.remove("lazy-iframe");
-                            iframeObserver.unobserve(iframe);
-                        }
-                    });
-                });
+    document.getElementById('scroll-up').addEventListener('click', function() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
 
-                lazyIframes.forEach(function(iframe) {
-                    iframeObserver.observe(iframe);
-                });
-            } else {
-                lazyIframes.forEach(function(iframe) {
+    var lazyIframes = [].slice.call(document.querySelectorAll("iframe.lazy-iframe"));
+    if ("IntersectionObserver" in window) {
+        let iframeObserver = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+                if (entry.isIntersecting) {
+                    let iframe = entry.target;
                     iframe.src = iframe.dataset.src;
-                });
-            }
+                    iframe.classList.remove("lazy-iframe");
+                    iframeObserver.unobserve(iframe);
+                }
+            });
         });
-    </script>
 
-</body>
-</html>
-
+        lazyIframes.forEach(function(iframe) {
+            iframeObserver.observe(iframe);
+        });
+    } else {
+        lazyIframes.forEach(function(iframe) {
+            iframe.src = iframe.dataset.src;
+        });
+    }
+</script>
+{% endblock %}
