@@ -14,7 +14,7 @@ body.night-mode {
 }
 
 .navbar a {
-    color: #ffffff;
+    color: #000000;
 }
 
 /* General */
@@ -24,14 +24,18 @@ body.night-mode {
     display: block;
     width: 100%;
     height: auto;
+    margin: 0;
 }
 
 .flex-container {
     display: flex;
+    flex-wrap: wrap; /* Permite saltar a nuevas líneas si es necesario */
     justify-content: space-between;
-    align-items: center;
+    align-items: stretch; /* Alinea verticalmente al máximo */
     width: 100%;
-    padding: 0 50px; /* Agrega más espacio a los lados */
+    height: 100%; /* Ocupa todo el alto disponible */
+    margin: 0;
+    padding: 0;
 }
 
 .flex-column {
@@ -42,70 +46,60 @@ body.night-mode {
 /* Columnas */
 .col {
     flex: 1;
-    padding: 10px;
+    padding: 5px; /* Espaciado reducido para optimizar espacio */
     box-sizing: border-box;
 }
 
 .col-md-3, .col-md-6 {
-    padding: 10px;
+    padding: 5px;
 }
-
 .col-md-3 {
     flex: 0 0 25%;
     max-width: 25%;
 }
-
 .col-md-6 {
     flex: 0 0 50%;
     max-width: 50%;
 }
-
-/* Carrusel */
-#carousel {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+@media (max-width: 768px) {
+    .col-md-3, .col-md-6 {
+        flex: 0 0 100%;
+        max-width: 100%; /* Ocupa todo el ancho en móviles */
+    }
 }
+/* Carrusel */
+
 
 .carousel-container {
     display: flex;
     position: relative;
-    width: calc(100% - 150px);
-}
-
-/* Ajustes definitivos para el carrusel */
-.carousel-container {
-    width: 100%; /* Ocupa todo el ancho disponible */
-    max-width: 1700px; /* Limita el tamaño máximo en pantallas grandes */
-    height: auto; /* Permite un ajuste dinámico de la altura */
+    width: 100%; /* Siempre ocupa el máximo ancho */
+    height: auto; /* Ajusta la altura dinámicamente */
+    max-width: none; /* Sin límite en pantallas grandes */
     margin: 0 auto; /* Centrado horizontal */
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 40px; /* Mayor separación entre el carrusel y los bloques laterales */
-}
-
-#carousel-clip {
-    width: 70%; /* Aumenta el tamaño del carrusel */
-    max-height: 1400px; /* Ajusta este valor según tu preferencia */
-    height: 800px; /* Altura fija */
-    border: none;
-    border-radius: 20px; /* Mantiene las esquinas redondeadas */
-    object-fit: fill; /* Hace que el contenido del iframe ocupe todo el espacio */
-    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
-    transition: opacity 0.5s ease;
+    gap: 10px; /* Espaciado reducido para pantallas pequeñas */
+    justify-content: center;
+    align-items: stretch;
 }
 
 @media (max-width: 768px) {
-    #carousel-clip {
-        height: 500px; /* Reduce la altura en pantallas más pequeñas */
+    .carousel-container {
+        flex-wrap: wrap; /* Reorganiza en filas para móviles */
+        gap: 5px; /* Espaciado mínimo en móviles */
     }
 }
+/* Ajustes definitivos para el carrusel */
 
-@media (max-width: 480px) {
-    #carousel-clip {
-        height: 350px; /* Ajusta para móviles */
-    }
+
+#clip-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: stretch;
+    width: 100%;
+    height: 100%;
+    margin: 0 auto;
+    gap: 10px; /* Espaciado dinámico entre clips */
 }
 
 /* Botones */
@@ -126,7 +120,7 @@ button {
 }
 
 .btn-secondary {
-    background-color: #6c757d;
+    background-color: #ffffff00;
     color: white;
 }
 
@@ -193,42 +187,39 @@ button {
     color: #666;
 }
 
-/* Contenedores */
-#clip-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: stretch;
-    width: 100%;
-    height: auto;
-    margin: 0 auto;
-}
-
 .clip {
-    display: none;
-    flex: 1 1 auto;
+    flex: 1 1 30%; /* Ajuste proporcional */
     min-width: 300px;
-    max-width: 33.333%; /* Ajuste dinámico para filas */
+    max-width: 33.333%;
     height: auto;
-}
-
-@media (min-width: 768px) {
-    .clip {
-        display: block;
-        flex: 0 0 33.3333%;
-        max-width: 33.3333%;
-    }
 }
 
 @media (max-width: 768px) {
     .clip {
-        display: block;
-        flex: 0 0 100%;
-        max-width: 100%; /* Ocupa todo el ancho en móviles */
+        flex: 1 1 100%; /* Ocupa todo el ancho en móviles */
+        max-width: 100%;
     }
 }
 
-/* Ajustes para el bloque inferior */
+/* Estilo para limitar el ancho y ajustar el texto de los comentarios */
+.comment-text-container {
+    max-width: 100%; /* Evita que el contenedor se extienda más allá del padre */
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+.comment-text {
+    max-width: 600px; /* Ancho máximo más restringido */
+    margin: 0 auto; /* Centra el texto si es necesario */
+    padding: 5px; /* Añade un poco de espacio interno */
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: pre-wrap;
+}   
+
+
+
+/* Pie de página siempre ocupando el ancho completo */
 #footer-block {
     width: 100%;
     height: auto;
@@ -239,6 +230,7 @@ button {
     align-items: center;
     box-shadow: 0px -4px 6px rgba(0, 0, 0, 0.1);
     border-top: 1px solid #ddd;
+    margin-top: auto; /* Empuja hacia abajo si el contenido es menor */
 }
 
 @media (max-width: 768px) {
@@ -274,32 +266,3 @@ button {
     margin: 0 20px; /* Aumenta la separación entre bloques laterales */
 }
 
-.carousel-container {
-    width: 100%;
-    max-width: 1700px; /* Ajusta el tamaño máximo del carrusel */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 40px; /* Espacio entre el carrusel y los bloques */
-}
-
-#carousel-clip {
-    width: 70%; /* Aumenta el tamaño del carrusel */
-    height: 800px;
-    border: none;
-    border-radius: 20px;
-    object-fit: fill;
-    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
-}
-
-@media (max-width: 768px) {
-    #carousel-clip {
-        height: 500px;
-    }
-}
-
-@media (max-width: 480px) {
-    #carousel-clip {
-        height: 350px;
-    }
-}

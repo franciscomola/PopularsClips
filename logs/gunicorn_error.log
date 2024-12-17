@@ -1,0 +1,64 @@
+[2024-12-01 15:10:18 +0000] [13373] [INFO] Starting gunicorn 23.0.0
+[2024-12-01 15:10:18 +0000] [13373] [INFO] Listening at: http://127.0.0.1:8000 (13373)
+[2024-12-01 15:10:18 +0000] [13373] [INFO] Using worker: sync
+[2024-12-01 15:10:18 +0000] [13374] [INFO] Booting worker with pid: 13374
+[2024-12-01 15:10:18 +0000] [13374] [ERROR] Exception in worker process
+Traceback (most recent call last):
+  File "/home/ubuntu/ev/lib/python3.12/site-packages/gunicorn/arbiter.py", line 608, in spawn_worker
+    worker.init_process()
+  File "/home/ubuntu/ev/lib/python3.12/site-packages/gunicorn/workers/base.py", line 135, in init_process
+    self.load_wsgi()
+  File "/home/ubuntu/ev/lib/python3.12/site-packages/gunicorn/workers/base.py", line 147, in load_wsgi
+    self.wsgi = self.app.wsgi()
+                ^^^^^^^^^^^^^^^
+  File "/home/ubuntu/ev/lib/python3.12/site-packages/gunicorn/app/base.py", line 66, in wsgi
+    self.callable = self.load()
+                    ^^^^^^^^^^^
+  File "/home/ubuntu/ev/lib/python3.12/site-packages/gunicorn/app/wsgiapp.py", line 57, in load
+    return self.load_wsgiapp()
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/ev/lib/python3.12/site-packages/gunicorn/app/wsgiapp.py", line 47, in load_wsgiapp
+    return util.import_app(self.app_uri)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/ev/lib/python3.12/site-packages/gunicorn/util.py", line 370, in import_app
+    mod = importlib.import_module(module)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/importlib/__init__.py", line 84, in import_module
+    raise TypeError("the 'package' argument is required to perform a "
+TypeError: the 'package' argument is required to perform a relative import for '...'
+[2024-12-01 15:10:18 +0000] [13374] [INFO] Worker exiting (pid: 13374)
+[2024-12-01 15:10:18 +0000] [13373] [ERROR] Worker (pid:13374) exited with code 3
+[2024-12-01 15:10:18 +0000] [13373] [ERROR] Shutting down: Master
+[2024-12-01 15:10:18 +0000] [13373] [ERROR] Reason: Worker failed to boot.
+[2024-12-01 17:18:41 +0000] [1403] [INFO] Starting gunicorn 23.0.0
+[2024-12-01 17:18:41 +0000] [1403] [INFO] Listening at: http://127.0.0.1:8000 (1403)
+[2024-12-01 17:18:41 +0000] [1403] [INFO] Using worker: sync
+[2024-12-01 17:18:41 +0000] [1404] [INFO] Booting worker with pid: 1404
+[2024-12-01 17:18:41 +0000] [1404] [ERROR] Exception in worker process
+Traceback (most recent call last):
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/gunicorn/arbiter.py", line 608, in spawn_worker
+    worker.init_process()
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/gunicorn/workers/base.py", line 135, in init_process
+    self.load_wsgi()
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/gunicorn/workers/base.py", line 147, in load_wsgi
+    self.wsgi = self.app.wsgi()
+                ^^^^^^^^^^^^^^^
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/gunicorn/app/base.py", line 66, in wsgi
+    self.callable = self.load()
+                    ^^^^^^^^^^^
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/gunicorn/app/wsgiapp.py", line 57, in load
+    return self.load_wsgiapp()
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/gunicorn/app/wsgiapp.py", line 47, in load_wsgiapp
+    return util.import_app(self.app_uri)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ubuntu/.local/lib/python3.12/site-packages/gunicorn/util.py", line 370, in import_app
+    mod = importlib.import_module(module)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/importlib/__init__.py", line 84, in import_module
+    raise TypeError("the 'package' argument is required to perform a "
+TypeError: the 'package' argument is required to perform a relative import for '...'
+[2024-12-01 17:18:41 +0000] [1404] [INFO] Worker exiting (pid: 1404)
+[2024-12-01 17:18:41 +0000] [1403] [ERROR] Worker (pid:1404) exited with code 3
+[2024-12-01 17:18:41 +0000] [1403] [ERROR] Shutting down: Master
+[2024-12-01 17:18:41 +0000] [1403] [ERROR] Reason: Worker failed to boot.

@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}
+Añade Clips - PopularClips
+{% endblock %}
+{% block content %}
+  <h2>Añadir un Clip de Twitch</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Añadir Clip</button>
+  </form>
+{% endblock %}

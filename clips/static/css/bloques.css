@@ -1,0 +1,133 @@
+/* bloques.css */
+
+/* General reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Contenedor principal */
+.container {
+    max-width: 1200px;
+    width: 90%; /* Se ajusta al 90% del ancho de la pantalla */
+    margin: 0 auto;
+    padding: 1rem;
+}
+
+/* Header */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background-color: #f5f5f5;
+    border-bottom: 2px solid #ddd;
+}
+
+.header .logo {
+    font-size: 2rem; /* Tamaño ajustable */
+    font-weight: bold;
+    color: #333;
+}
+
+.header .menu {
+    display: flex;
+    gap: 1rem;
+}
+
+.header .menu a {
+    text-decoration: none;
+    color: #333;
+    font-size: 1rem; /* Tamaño ajustable */
+    transition: color 0.3s ease;
+}
+
+.header .menu a:hover {
+    color: #0077cc;
+}
+
+/* Bloques principales */
+.main-block {
+    display: flex;
+    flex-wrap: wrap; /* Permite que los bloques se ajusten en pantallas pequeñas */
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+/* Bloque de contenido general */
+.block {
+    flex: 1 1 45%; /* Ajusta el tamaño de los bloques: mínimo 45% del ancho del contenedor */
+    padding: 1rem;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.block:hover {
+    transform: translateY(-5px);
+}
+
+/* Ajustes específicos para contenido interno */
+.block h2 {
+    font-size: 1.5rem; /* Tamaño ajustable */
+    margin-bottom: 0.5rem;
+    color: #0077cc;
+}
+
+.block p {
+    font-size: 1rem; /* Tamaño ajustable */
+    color: #555;
+    line-height: 1.5;
+}
+
+/* Footer */
+.footer {
+    margin-top: 2rem;
+    padding: 1rem;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    font-size: 0.9rem; /* Tamaño ajustable */
+}
+
+/* Media Queries para ajustar tamaños en pantallas pequeñas */
+@media (max-width: 768px) {
+    .header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .header .menu {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .main-block {
+        flex-direction: column; /* Los bloques se apilan verticalmente */
+    }
+
+    .block {
+        flex: 1 1 100%; /* Los bloques ocupan el 100% del ancho del contenedor */
+    }
+}
+
+@media (max-width: 480px) {
+    .header .logo {
+        font-size: 1.5rem; /* Ajusta el tamaño del logo */
+    }
+
+    .header .menu a {
+        font-size: 0.9rem; /* Ajusta el tamaño del texto de los enlaces */
+    }
+
+    .block h2 {
+        font-size: 1.2rem; /* Ajusta el tamaño de los encabezados */
+    }
+
+    .block p {
+        font-size: 0.9rem; /* Ajusta el tamaño del texto del bloque */
+    }
+}

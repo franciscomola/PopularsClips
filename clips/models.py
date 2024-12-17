@@ -24,6 +24,7 @@ class Clip(models.Model):
     ]
     language = models.CharField(max_length=50, choices=LANGUAGE_CHOICES)
     from_twitch = models.BooleanField(default=True)  # True si fue extraído automáticamente
+    uploaded_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='uploaded_clips', null=True, blank=True)  # Usuario que subió el clip
 
     def __str__(self):
         return self.title
@@ -53,5 +54,3 @@ class Comment(models.Model):
 
     def __str__(self):
         return f'Comment by {self.user.username} on {self.clip.title}: {self.text[:20]}...'
-
-

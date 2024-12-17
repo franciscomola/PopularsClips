@@ -10,56 +10,49 @@ Lista de Clips - PopularClips
     <!-- Bloques principales -->
     <div class="row">
         <!-- Bloque Izquierdo: Ranking -->
-        <div class="col-md-2 ranking-block"style="
-        width: 230px;
-        padding-left: 0px;
-        padding-right: 0px;
-    ">
-            <h2 style="width: 200px;">Top 3 Clips Populares de la Semana</h2>
-            <a href="{% url 'clip_ranking' %}" class="btn btn-primary">Ver Ranking Total</a>
+        <div class="col-md-2 ranking-block"style="width: 230px; padding-left: 0px; padding-right: 0px;">
             <ol class="ranking-list">
+                    <h2 style="width: 200px;">Top 3 Clips Populares de la Semana</h2>
+
                 {% for clip in ranking_clips %}
                     <li>
                         <a href="{% url 'clip_detail' clip.id %}">{{ clip.title }}</a> - {{ clip.vote_score }} votos
                     </li>
                 {% endfor %}
             </ol>
+            <a href="{% url 'clip_ranking' %}" class="btn btn-primary">Ver Ranking Total</a>
+
         </div>
 
         <!-- Bloque Central: Carrusel -->
         <div class="col-md-8 carrusel-block">
             <div id="carousel" class="text-center mb-4">
                 <button id="prev-clip" class="btn btn-secondary">
-                    <img src="{% static 'imagen/flecha-izquierda.png' %}" alt="Anterior" style="width: 60px; height: 35px;">
+                    <img src="{% static 'imagen/izquierda.png' %}" alt="Anterior" style="width: 60px; height: 35px;">
                 </button>
                 <div class="carousel-container" style="display: flex; position: relative;">
                     <iframe id="carousel-clip" src="" allowfullscreen style="width: 600px;height: 350px;border: none;border-radius: 20px;box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);"></iframe>
                 </div>
                 <button id="next-clip" class="btn btn-secondary">
-                    <img src="{% static 'imagen/flecha-derecha.png' %}" alt="Siguiente" style="width: 60px; height: 35px;">
-                </button>
+                    <img src="{% static 'imagen/derecha.png' %}" alt="Siguiente" style="width: 60px; height: 35px;">
+                </button>   
             </div>
         </div>
 
         <!-- Bloque Derecho: FAQ -->
         <div class="col-md-2 faq-block"style="left: 20px;">
-            <h3 style="width: 200px;">Preguntas Típicas </h3>
             <ul class="faq-list">
-                <li><a href="#">¿Cómo puedo subir un clip?</a></li>
-                <li><a href="#">¿Qué es un ranking de clips?</a></li>
-                <li><a href="#">¿Cómo voto por un clip?</a></li>
-                
+                <h3 style="width: 200px;">Preguntas Típicas </h3>
+                <li><a href="{% url 'faq' %}#faq-1">¿Cómo puedo subir un clip?</a></li>
+                <li><a href="{% url 'faq' %}#faq-2">¿Qué es un ranking de clips?</a></li>
+                <li><a href="{% url 'faq' %}#faq-3">¿Cómo voto por un clip?</a></li>
             </ul>
-            <h3 style="width: 200px;">Últimos Clips Subidos</h3>
+            <ul class="añadeclips">
+                <h3 style="width: 200px;">Añade Clips</h3>
+                <p> Registrate para poder añadir clips!</p>
+           </ul>
             <ul class="latest-clips">
-                {% for clip in latest_clips %}
-                    <li>
-                        <a href="{% url 'clip_detail' clip.id %}">
-                            <img src="{{ clip.thumbnail_url }}" alt="{{ clip.title }}" class="clip-thumbnail">
-                            {{ clip.title }}
-                        </a>
-                    </li>
-                {% endfor %}
+                
                 <h3>¿Necesitas Ayuda?</h3>
                 <p>Contáctanos o revisa nuestras preguntas frecuentes para más información.</p>
                 <a href="{% url 'contact_us' %}" class="btn btn-reiniciar">Contáctanos</a>
@@ -115,37 +108,75 @@ Lista de Clips - PopularClips
 
 <!-- Scripts -->
 <script>
-    function iniciarTour() {
-        // Verifica si el usuario ya vio el tour
-        if (localStorage.getItem('tourVisto') !== 'true') {
-            introJs().setOptions({
-                steps: [
-                    {
-                        intro: "¡Bienvenido a PopularClips! Vamos a explorar las principales funciones de esta aplicación."
-                    },
-                    {
-                        element: document.querySelector('.ranking-list'),
-                        intro: "Aquí puedes ver los clips más populares de la semana. ¡Haz clic para ver más!"
-                    },
-                    {
-                        element: document.querySelector('#carousel'),
-                        intro: "Este es el carrusel. Haz clic en las flechas para ver clips aleatorios."
-                    },
-                    {
-                        element: document.querySelector('#order-select'),
-                        intro: "Usa este filtro para ordenar los clips según fecha, popularidad o idioma."
-                    },
-                    {
-                        element: document.querySelector('.btn-outline-primary'),
-                        intro: "Inicia sesión o regístrate para acceder a todas las funciones."
-                    }
-                ]
-            }).start();
+  function iniciarTour() {
+    // Verifica si el usuario ya vio el tour
+    if (localStorage.getItem('tourVisto') !== 'true') {
+        const steps = [
+            {
+                intro: "¡Bienvenido a PopularClips! Vamos a explorar las principales funciones de esta aplicación."
+            }
+        ];
 
-            // Marca que el tour ha sido visto
-            localStorage.setItem('tourVisto', 'true');
+        // Verifica si cada elemento existe antes de añadirlo
+        if (document.querySelector('.ranking-list')) {
+            steps.push({
+                element: document.querySelector('.ranking-list'),
+                intro: "Aquí puedes ver los clips más populares de la semana. ¡Haz clic para ver más!"
+            });
         }
+
+        if (document.querySelector('#carousel')) {
+            steps.push({
+                element: document.querySelector('#carousel'),
+                intro: "Este es el carrusel. Haz clic en las flechas para ver clips aleatorios."
+            });
+        }
+
+        if (document.querySelector('#order-select')) {
+            steps.push({
+                element: document.querySelector('#order-select'),
+                intro: "Usa este filtro para ordenar los clips según fecha, popularidad o idioma."
+            });
+        }
+
+        if (document.querySelector('.btn-outline-primary')) {
+            steps.push({
+                element: document.querySelector('.btn-outline-primary'),
+                intro: "Inicia sesión o regístrate para acceder a todas las funciones."
+            });
+        }
+
+        // Nuevos elementos: Preguntas Frecuentes
+        if (document.querySelector('.faq-list')) {
+            steps.push({
+                element: document.querySelector('.faq-list'),
+                intro: "Aquí puedes encontrar respuestas a las preguntas frecuentes sobre cómo usar la aplicación."
+            });
+        }
+        // Nuevos elementos: clips
+        if (document.querySelector('.añadeclips')) {
+            steps.push({
+                element: document.querySelector('.añadeclips'),
+                intro: "Puedes añadir clips cuando estes registrado desde la parte superior!."
+            });
+        }
+
+        // Nuevos elementos: ¿Necesitas Ayuda?
+        const lastClipsElement = document.querySelector('.latest-clips');
+        if (lastClipsElement) {
+            steps.push({
+                element: lastClipsElement,
+                intro: "¿Tienes dudas? Haz clic aquí para contactarnos o visita nuestra sección de ayuda."
+            });
+        }
+
+        // Inicia el tour
+        introJs().setOptions({ steps }).start();
+
+        // Marca que el tour ha sido visto
+        localStorage.setItem('tourVisto', 'true');
     }
+}
 
     // Llamar al tour en el botón "Empezar tour" o al cargar la página si es la primera vez
     document.addEventListener("DOMContentLoaded", function() {

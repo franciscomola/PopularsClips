@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Preguntas Frecuentes - PopularClips
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="mb-4">Preguntas Frecuentes</h1>
+    
+    <!-- Índice de preguntas -->
+    <ul class="faq-index">
+        <li><a href="#question1">¿Cómo puedo subir un clip?</a></li>
+        <li><a href="#question2">¿Qué es un ranking de clips?</a></li>
+        <li><a href="#question3">¿Cómo voto por un clip?</a></li>
+        <li><a href="#question4">¿Qué hago si tengo problemas técnicos?</a></li>
+    </ul>
+
+    <hr>
+
+    <!-- Preguntas y respuestas -->
+    <div class="faq-content">
+        <h2 id="question1">¿Cómo puedo subir un clip?</h2>
+        <p>
+            Para subir un clip, inicia sesión en tu cuenta y dirígete a la sección 
+            <strong>"Subir Clip"</strong> desde el menú principal. 
+            Llena el formulario con la URL del clip, el título y cualquier información adicional requerida.
+        </p>
+
+        <h2 id="question2">¿Qué es un ranking de clips?</h2>
+        <p>
+            El ranking de clips es una lista ordenada que muestra los clips más populares basándose en el 
+            número de votos de la comunidad. Puedes acceder a esta lista desde la sección 
+            <strong>"Ranking de Clips"</strong> en el menú principal.
+        </p>
+
+        <h2 id="question3">¿Cómo voto por un clip?</h2>
+        <p>
+            Para votar por un clip, haz clic en el botón de votación que aparece debajo del clip en su página 
+            de detalles. Cada usuario puede votar solo una vez por cada clip.
+        </p>
+
+        <h2 id="question4">¿Qué hago si tengo problemas técnicos?</h2>
+        <p>
+            Si encuentras algún problema técnico, puedes contactarnos a través de la sección 
+            <strong>"Contáctanos"</strong> o revisar las <strong>Preguntas Frecuentes</strong> para 
+            obtener más información. También puedes enviarnos un correo electrónico a 
+            soporte@popularclips.com.
+        </p>
+    </div>
+</div>
+
+<!-- Estilo para mejorar la presentación -->
+<style>
+    .faq-index {
+        list-style: none;
+        padding: 0;
+    }
+
+    .faq-index li {
+        margin: 10px 0;
+    }
+
+    .faq-index a {
+        color: #007bff;
+        text-decoration: none;
+    }
+
+    .faq-index a:hover {
+        text-decoration: underline;
+    }
+
+    .faq-content h2 {
+        margin-top: 30px;
+        font-size: 1.5rem;
+    }
+
+    .faq-content p {
+        font-size: 1rem;
+        margin: 10px 0;
+    }
+</style>
+
+<!-- Script para desplazamiento suave -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Añade desplazamiento suave a los enlaces con hash
+        const links = document.querySelectorAll('.faq-index a');
+        links.forEach(link => {
+            link.addEventListener('click', function (event) {
+                event.preventDefault();
+                const targetId = this.getAttribute('href').substring(1);
+                const targetElement = document.getElementById(targetId);
+
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 20, // Ajusta el desplazamiento si hay un menú fijo
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}

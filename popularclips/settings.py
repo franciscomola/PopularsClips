@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+from decouple import config
 import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -19,12 +20,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-hfwx$ljjr6e&0r##g2h*-u@qd=+_8pfzjvtio^b+i54upgtb(x'
-
+SECRET_KEY = config('SECRET_KEY')
+TWITCH_CLIENT_ID = config('TWITCH_CLIENT_ID')
+TWITCH_CLIENT_SECRET = config('TWITCH_CLIENT_SECRET')
+TWITCH_API_BASE_URL = config('TWITCH_API_BASE_URL')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['popularclips.duckdns.org', 'www.popularclips.duckdns.org']
 
 
 # Application definition
@@ -49,6 +52,7 @@ REST_FRAMEWORK = {
 }
 
 MIDDLEWARE = [
+    'clips.middleware.LogHeadersMiddleware',
 #    'csp.middleware.CSPMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -64,7 +68,7 @@ ROOT_URLCONF = 'popularclips.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],
+        'DIRS': [BASE_DIR / 'clips' / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -126,10 +130,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'clips/static'),
-    os.path.join(BASE_DIR, 'popularclips/ico'), 
-]
+#STATICFILES_DIRS = [
+#    os.path.join(BASE_DIR, 'clips/static'),
+#    os.path.join(BASE_DIR, 'popularclips/ico'), 
+#]
+STATICFILES_DIRS = []
 
 
     # Otros directorios de archivos estáticos si los tienes
@@ -142,8 +147,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_REDIRECT_URL = '/clips/'  # Redirige a la página principal de clips
 LOGOUT_REDIRECT_URL = '/clips/'  # Redirige a la página principal de clips
-
-
+LOGIN_URL = '/accounts/login/'
 CSP_DEFAULT_SRC = ("'self'",)
 CSP_SCRIPT_SRC = (
     "'self'", 
@@ -163,7 +167,31 @@ CSP_FRAME_SRC = ("'self'", "https://clips.twitch.tv", "https://player.twitch.tv"
 
 CSRF_TRUSTED_ORIGINS = [
     'https://golden-civet-hip.ngrok-free.app',
+    'https://popularclips.duckdns.org',
+    'https://www.popularclips.duckdns.org'
 ]
 
-NGROK_URL = "golden-civet-hip.ngrok-free.app"  # Cambia esto a tu URL para visualizar los clips
+NGROK_URL = 'popularclips.duckdns.org' # Cambia esto a tu URL para visualizar los clips
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'ERROR',
+            'class': 'logging.FileHandler',
+            'filename': '/var/www/popularclips/logs/django_error.log',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+    },
+}
+
 

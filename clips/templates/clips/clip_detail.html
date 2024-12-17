@@ -4,168 +4,174 @@
 {% block title %}{{ clip.title }}{% endblock %}
 
 {% block content %}
-    <div class="container mt-5"style="
-    padding-right: 500px;">
-        <!-- Video container con título y iframe -->
-        <div class="video-container mb-4">
-            <h1>{{ clip.title }}</h1>
-            <iframe src="{{ clip.url }}&parent={{ ngrok_url }}" height="480" width="100%" frameborder="0" allowfullscreen style="width: 810px; height: 460px;"></iframe>
-            <p><strong>Streamer:</strong> {{ clip.streamer.name }}</p>
-            <button class="btn btn-info" data-toggle="collapse" data-target="#details">Detalles</button>
-            <div id="details" class="collapse mt-3">
-                <p><strong>Idioma:</strong> {{ clip.language }}</p>
-                <p><strong>Descripción:</strong> {{ clip.description }}</p>
-                <p><strong>Creado en:</strong> {{ clip.twitch_created_at|date:"D, d M Y H:i:s" }}</p>
-            </div>
-        </div>
-
-        <!-- Sección de votación y comentarios -->
-        {% if is_authenticated %}
-            <div class="vote-section mt-4">
-                <button id="vote-button" class="btn btn-primary">
-                    {% if user_vote == 1 %}
-                        Remove Vote
-                    {% else %}
-                        Vote
-                    {% endif %}
-                </button>
-                <span id="vote-count">{{ vote_count }}</span>
-            </div>
-
-            <div class="comment-section mt-4">
-                <h3>Comentarios</h3>
-                <form method="POST">
-                    {% csrf_token %}
-                    {{ form.as_p }}
-                    <button type="submit" class="btn btn-primary">Comentar</button>
-                </form>
-                <hr>
-                
-                {% for comment in comments %}
-                    <div class="comment d-flex justify-content-between align-items-start mb-3" data-comment-id="{{ comment.id }}">
-                        <div class="comment-text-container">
-                            <p><strong style="color: rgb(124, 203, 5)">{{ comment.user.username }}:</strong></p>
-                            <p class="comment-text">{{ comment.text }}</p>
-                        </div>
-
-                        {% if comment.user == request.user %}
-                            <span class="menu-icon" onclick="toggleMenu(this)">&#x22EE;</span>
-                            <div class="custom-menu d-none">
-                                <button class="custom-menu-item edit-comment" data-toggle="modal" data-target="#editModal">Editar</button>
-                                <button class="custom-menu-item delete-comment">Eliminar</button>
-                            </div>
-                        {% endif %}
-                    </div>
-                {% endfor %}
-            </div>
+<div class="container mt-5">
+    <!-- Detalles del Clip -->
+    <h1>{{ clip.title }}</h1>
+    <iframe src="{{ clip.url }}&parent={{ ngrok_url }}" width="100%" height="480" frameborder="0" allowfullscreen></iframe>
+    <p><strong>Streamer:</strong> {{ clip.streamer.name }}</p>
+    <p><strong>Idioma:</strong> {{ clip.get_language_display }}</p>
+    
+    <!-- Subido por -->
+    <p><strong>Subido por:</strong> 
+        {% if clip.uploaded_by %}
+            {{ clip.uploaded_by.username }}
         {% else %}
-            <p>Para dejar un comentario, <a href="{% url 'login' %}">inicia sesión</a> o <a href="{% url 'register' %}">regístrate</a>.</p>
+            Anónimo
         {% endif %}
+    </p>
+
+    <!-- Botón de eliminación -->
+    {% if user.is_authenticated and user == clip.uploaded_by %}
+    <form method="POST" action="{% url 'delete_clip' clip.id %}" style="display:inline;">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Eliminar Clip</button>
+    </form>
+    {% endif %}
+</div>
+
+<!-- Sección de votación y comentarios -->
+{% if is_authenticated %}
+    <div class="vote-section mt-4">
+        <button id="vote-button" class="btn btn-primary">
+            {% if user_vote == 1 %}
+                Remove Vote
+            {% else %}
+                Vote
+            {% endif %}
+        </button>
+        <span id="vote-count">{{ vote_count }}</span>
     </div>
 
-    <!-- Modal para editar comentarios -->
-    <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="editModalLabel">Editar Comentario</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+    <div class="comment-section mt-4">
+        <h3>Comentarios</h3>
+        <form method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary">Comentar</button>
+        </form>
+        <hr>
+        
+        {% for comment in comments %}
+            <div class="comment d-flex justify-content-between align-items-start mb-3" data-comment-id="{{ comment.id }}">
+                <div class="comment-text-container">
+                    <p><strong style="color: rgb(124, 203, 5)">{{ comment.user.username }}:</strong></p>
+                    <p class="comment-text">{{ comment.text }}</p>
                 </div>
-                <div class="modal-body">
-                    <textarea id="edit-comment-text" class="form-control"></textarea>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                    <button type="button" class="btn btn-primary" id="save-edit">Guardar cambios</button>
-                </div>
+
+                {% if comment.user == request.user %}
+                    <span class="menu-icon btn btn-link" onclick="toggleMenu(this)">&#x22EE;</span>
+                    <div class="custom-menu d-none">
+                        <button class="custom-menu-item edit-comment" data-toggle="modal" data-target="#editModal">Editar</button>
+                        <button class="custom-menu-item delete-comment">Eliminar</button>
+                    </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <p>Para dejar un comentario, <a href="{% url 'login' %}">inicia sesión</a> o <a href="{% url 'register' %}">regístrate</a>.</p>
+{% endif %}
+</div>
+
+<!-- Modal para editar comentarios -->
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editModalLabel">Editar Comentario</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <textarea id="edit-comment-text" class="form-control"></textarea>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" id="save-edit">Guardar cambios</button>
             </div>
         </div>
     </div>
+</div>
 
-    <style>
-        /* Estilos generales */
-        /* Contenedor de comentario */
-        .comment-container {
-            display: flex;
-            flex-direction: column;
-            max-width: 100%;
-            word-wrap: break-word; /* Esto evita que las palabras largas se desborden */
-        }
+<script>
+// Función para mostrar/ocultar el menú personalizado
+function toggleMenu(icon) {
+    const menu = icon.nextElementSibling;
+    document.querySelectorAll('.custom-menu').forEach(m => {
+        if (m !== menu) m.classList.add('d-none');
+    });
+    menu.classList.toggle('d-none');
+}
 
-        /* Contenedor del texto del comentario */
-        .comment-text-container {
-            max-width: 100%; /* Hace que el contenedor se ajuste al tamaño disponible */
-            overflow-wrap: break-word; /* Asegura que el texto se ajuste sin desbordar */
-        }
+// Cerrar el menú al hacer clic fuera de él
+document.addEventListener('click', function(event) {
+    if (!event.target.classList.contains('menu-icon') && !event.target.classList.contains('custom-menu-item')) {
+        document.querySelectorAll('.custom-menu').forEach(menu => menu.classList.add('d-none'));
+    }
+});
 
-        /* Limitar el tamaño del comentario */
-        .comment-text {
-            word-wrap: break-word; /* Evita que el texto se salga de la caja */
-            max-width: 80%; /* Limita el ancho máximo del comentario */
-            overflow: hidden; /* Elimina cualquier contenido extra que se desborde */
-            text-overflow: ellipsis; /* Muestra "..." si el comentario es demasiado largo */
-        }
+// Acción para el botón de votar
+document.getElementById('vote-button').addEventListener('click', function() {
+    let csrfToken = '{{ csrf_token }}';
+    fetch(`{% url 'clip_vote' clip.id %}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-CSRFToken': csrfToken
+        },
+    })
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById('vote-count').textContent = data.vote_count;
+        this.textContent = data.user_vote === 1 ? 'Remove Vote' : 'Vote';
+    })
+    .catch(error => console.error('Error:', error));
+});
 
-        /* Opcional: Limitar el tamaño máximo de los comentarios para evitar que estiren demasiado la página */
-        .comment {
-            max-width: 900px; /* Limita el ancho máximo de la caja de comentario */
-            margin: 0 auto; /* Centra el comentario en la página */
-        }
+// Editar comentario
+document.querySelectorAll('.edit-comment').forEach(button => {
+    button.addEventListener('click', function() {
+        let commentElement = this.closest('.comment');
+        let commentId = commentElement.getAttribute('data-comment-id');
+        let commentText = commentElement.querySelector('.comment-text').textContent;
+        document.getElementById('edit-comment-text').value = commentText;
 
-
-        .custom-menu {
-            position: absolute;
-            background-color: #ffffff;
-            border: 1px solid #ccc;
-            padding: 5px;
-            border-radius: 5px;
-            right: 0;
-            top: 0;
-            z-index: 100;
-        }
-
-        .custom-menu-item {
-            background: none;
-            border: none;
-            color: #007bff;
-            padding: 5px;
-            cursor: pointer;
-            text-align: left;
-            width: 100%;
-        }
-
-        .custom-menu-item:hover {
-            background-color: #f0f0f0;
-        }
-
-        .d-none {
-            display: none;
-        }
-    </style>
-
-    <script>
-        // Función para mostrar/ocultar el menú personalizado
-        function toggleMenu(icon) {
-            const menu = icon.nextElementSibling;
-            document.querySelectorAll('.custom-menu').forEach(m => {
-                if (m !== menu) m.classList.add('d-none');
-            });
-            menu.classList.toggle('d-none');
-        }
-
-        // Cerrar el menú al hacer clic fuera de él
-        document.addEventListener('click', function(event) {
-            if (!event.target.classList.contains('menu-icon') && !event.target.classList.contains('custom-menu-item')) {
-                document.querySelectorAll('.custom-menu').forEach(menu => menu.classList.add('d-none'));
-            }
-        });
-
-        // Acción para el botón de votar
-        document.getElementById('vote-button').addEventListener('click', function() {
+        document.getElementById('save-edit').onclick = function() {
+            let newText = document.getElementById('edit-comment-text').value;
             let csrfToken = '{{ csrf_token }}';
-            fetch(`{% url 'clip_vote' clip.id %}`, {
+
+            fetch(`{% url 'edit_comment' 0 %}`.replace(/0/, commentId), {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRFToken': csrfToken
+                },
+                body: `text=${encodeURIComponent(newText)}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    commentElement.querySelector('.comment-text').textContent = data.comment_text;
+                    $('#editModal').modal('hide');
+                } else {
+                    console.error('Error al editar el comentario.');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        };
+    });
+});
+
+// Eliminar comentario
+document.querySelectorAll('.delete-comment').forEach(button => {
+    button.addEventListener('click', function() {
+        let commentElement = this.closest('.comment');
+        let commentId = commentElement.getAttribute('data-comment-id');
+        let csrfToken = '{{ csrf_token }}';
+
+        if (confirm('¿Estás seguro de que quieres eliminar este comentario?')) {
+            fetch(`{% url 'delete_comment' 0 %}`.replace(/0/, commentId), {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
@@ -174,72 +180,15 @@
             })
             .then(response => response.json())
             .then(data => {
-                document.getElementById('vote-count').textContent = data.vote_count;
-                this.textContent = data.user_vote === 1 ? 'Remove Vote' : 'Vote';
+                if (data.success) {
+                    commentElement.remove();
+                } else {
+                    console.error('Error al eliminar el comentario.');
+                }
             })
             .catch(error => console.error('Error:', error));
-        });
-
-        // Editar comentario
-        document.querySelectorAll('.edit-comment').forEach(button => {
-            button.addEventListener('click', function() {
-                let commentElement = this.closest('.comment');
-                let commentId = commentElement.getAttribute('data-comment-id');
-                let commentText = commentElement.querySelector('.comment-text').textContent;
-                document.getElementById('edit-comment-text').value = commentText;
-
-                document.getElementById('save-edit').onclick = function() {
-                    let newText = document.getElementById('edit-comment-text').value;
-                    let csrfToken = '{{ csrf_token }}';
-
-                    fetch(`{% url 'edit_comment' 0 %}`.replace(/0/, commentId), {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded',
-                            'X-CSRFToken': csrfToken
-                        },
-                        body: `text=${encodeURIComponent(newText)}`
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            commentElement.querySelector('.comment-text').textContent = data.comment_text;
-                            $('#editModal').modal('hide');
-                        } else {
-                            console.error('Error al editar el comentario.');
-                        }
-                    })
-                    .catch(error => console.error('Error:', error));
-                };
-            });
-        });
-
-        // Eliminar comentario
-        document.querySelectorAll('.delete-comment').forEach(button => {
-            button.addEventListener('click', function() {
-                let commentElement = this.closest('.comment');
-                let commentId = commentElement.getAttribute('data-comment-id');
-                let csrfToken = '{{ csrf_token }}';
-
-                if (confirm('¿Estás seguro de que quieres eliminar este comentario?')) {
-                    fetch(`{% url 'delete_comment' 0 %}`.replace(/0/, commentId), {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded',
-                            'X-CSRFToken': csrfToken
-                        },
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            commentElement.remove();
-                        } else {
-                            console.error('Error al eliminar el comentario.');
-                        }
-                    })
-                    .catch(error => console.error('Error:', error));
-                }
-            });
-        });
-    </script>
+        }
+    });
+});
+</script>
 {% endblock %}

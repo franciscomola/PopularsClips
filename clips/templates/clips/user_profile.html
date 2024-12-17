@@ -4,8 +4,33 @@
 
 {% block content %}
 <div class="container mt-5">
-    <h2>Perfil de {{ user.username }}</h2>
-    <p>Bienvenido, {{ user.username }}. Aquí puedes ver y editar tu perfil.</p>
-</div>
-{% endblock %}
+    <h2>Perfil de {{ profile_user.username }}</h2>
+    <div class="mt-4">
+        <h3>Cambiar Contraseña</h3>
+        <form method="post" id="password-change-form">
+            {% csrf_token %}
+            {{ password_change_form.as_p }}
+            <button type="submit" class="btn btn-primary">Cambiar Contraseña</button>
+        </form>
+    </div>
 
+    <div class="mt-4">
+        <h3>Eliminar Cuenta</h3>
+        <!-- Formulario oculto para la eliminación de cuenta -->
+        <form id="delete-account-form" method="POST" action="{% url 'delete_account' %}" style="display: none;">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Confirmar eliminación</button>
+        </form>
+        <!-- Enlace con confirmación y envío del formulario -->
+        <a href="#" class="btn btn-danger" onclick="confirmDelete()">Eliminar Cuenta</a>
+    </div>
+</div>
+
+<script>
+    function confirmDelete() {
+        if (confirm('¿Estás seguro de que quieres eliminar tu cuenta?')) {
+            document.getElementById('delete-account-form').submit();  // Envía el formulario
+        }
+    }
+</script>
+{% endblock %}

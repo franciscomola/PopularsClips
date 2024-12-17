@@ -1,21 +1,37 @@
 {% extends 'base.html' %}
+{% load static %}
 
-{% block title %}
-Ranking de Clips - PopularClips
-{% endblock %}
+{% block title %}Ranking de Clips Populares{% endblock %}
 
 {% block content %}
 <div class="container mt-5">
-    <h2>Ranking Total de Clips</h2>
-    <ol class="ranking-list">
-        {% for clip in ranking_clips %}
-            <li>
-                <a href="{% url 'clip_detail' clip.id %}">
-                    <h5>{{ clip.title }}</h5>
-                </a>
-                <p>{{ clip.vote_score }} votos - Subido por {{ clip.streamer.name }}</p>
-            </li>
-        {% endfor %}
-    </ol>
+    <h2>Top {{ clips.count }} Clips Más Votados</h2>
+    
+    {% if clips %}
+        <ol class="ranking-list">
+            {% for clip in clips %}
+                <li>
+                    <a href="{% url 'clip_detail' clip.id %}">{{ clip.title }}</a> - {{ clip.vote_score }} votos
+                </li>
+            {% endfor %}
+        </ol>
+
+        <!-- Paginación -->
+        <div class="pagination">
+            <span class="step-links">
+                {% if clips.has_previous %}
+                    <a href="?page=1">&laquo; Primero</a>
+                    <a href="?page={{ clips.previous_page_number }}">Anterior</a>
+                {% endif %}
+
+                {% if clips.has_next %}
+                    <a href="?page={{ clips.next_page_number }}">Siguiente</a>
+                    <a href="?page={{ clips.paginator.num_pages }}">Último &raquo;</a>
+                {% endif %}
+            </span>
+        </div>
+    {% else %}
+        <p>No hay clips disponibles.</p>
+    {% endif %}
 </div>
 {% endblock %}

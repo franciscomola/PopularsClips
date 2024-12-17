@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sesión Cerrada</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <div class="container">
+        <!-- Bloque para mensajes -->
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <!-- Contenido principal -->
+        <h1>Has cerrado sesión</h1>
+        <p>¡Gracias por usar PopularClips! Esperamos verte pronto.</p>
+        <a href="{% url 'clip_list' %}" class="btn btn-primary">Volver al Inicio</a>
+    </div>
+</body>
+</html>
