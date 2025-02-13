@@ -1,5 +1,5 @@
-import os
 import requests
+from decouple import config
 from django.core.management.base import BaseCommand
 from clips.models import Streamer  # Asegúrate de importar tu modelo Streamer correctamente
 
@@ -12,11 +12,11 @@ class Command(BaseCommand):
         """
         url = "https://id.twitch.tv/oauth2/token"
         params = {
-            'client_id': os.environ.get('CLIENT_ID'),
-            'client_secret': os.environ.get('CLIENT_SECRET'),
+            'client_id': config('TWITCH_CLIENT_ID'),  # Carga desde .env
+            'client_secret': config('TWITCH_CLIENT_SECRET'),  # Carga desde .env
             'grant_type': 'client_credentials'
         }
-        response = requests.post(url, params=params)
+        response = requests.post(url, data=params)  # Usa 'data' para POST
         response.raise_for_status()  # Lanza un error si la respuesta es un error
         return response.json()['access_token']
 
@@ -27,7 +27,7 @@ class Command(BaseCommand):
         url = "https://api.twitch.tv/helix/users"
         headers = {
             'Authorization': f'Bearer {access_token}',
-            'Client-Id': os.environ.get('CLIENT_ID'),
+            'Client-Id': config('TWITCH_CLIENT_ID'),  # Carga desde .env
         }
         params = {
             'login': username,  # Nombre de usuario del streamer
@@ -67,4 +67,3 @@ class Command(BaseCommand):
             self.save_streamer(username, broadcaster_id)
         except Exception as e:
             self.stdout.write(self.style.ERROR(f'Ocurrió un error: {e}'))
-

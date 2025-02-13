@@ -1,7 +1,6 @@
-#get_clips
-import os
 import requests
-from django.utils import timezone
+from decouple import config
+from django.utils.timezone import now, timedelta
 from django.core.management.base import BaseCommand
 from clips.models import Streamer, Clip
 
@@ -10,64 +9,80 @@ class Command(BaseCommand):
 
     def handle(self, *args, **kwargs):
         access_token = self.get_access_token()
-        streamers = Streamer.objects.all()  # Obtener todos los streamers de la base de datos
+        streamers = Streamer.objects.all()
+
         for streamer in streamers:
             self.stdout.write(self.style.SUCCESS(f'Fetching clips for streamer: {streamer.name}'))
-            clips = self.get_clips(access_token, streamer)
-            if clips:
-                self.stdout.write(self.style.SUCCESS(f'Fetched {len(clips)} clips for {streamer.name}.'))
+            try:
+                clips = self.get_clips(access_token, streamer)
+                if clips:
+                    self.stdout.write(self.style.SUCCESS(f'Fetched and saved {len(clips)} clips for {streamer.name}.'))
+                else:
+                    self.stdout.write(self.style.WARNING(f'No clips found for {streamer.name}.'))
+            except Exception as e:
+                self.stdout.write(self.style.ERROR(f'Error fetching clips for {streamer.name}: {e}'))
 
     def get_access_token(self):
+        """
+        Obtiene el token de acceso para la API de Twitch.
+        """
         url = "https://id.twitch.tv/oauth2/token"
         params = {
-            'client_id': os.environ.get('CLIENT_ID'),
-            'client_secret': os.environ.get('CLIENT_SECRET'),
+            'client_id': config('TWITCH_CLIENT_ID'),  # Carga desde el archivo .env
+            'client_secret': config('TWITCH_CLIENT_SECRET'),  # Carga desde el archivo .env
             'grant_type': 'client_credentials'
         }
-        response = requests.post(url, params=params)
+        response = requests.post(url, data=params)
         response.raise_for_status()
         return response.json()['access_token']
 
     def get_clips(self, access_token, streamer):
+        """
+        Obtiene los clips de Twitch de un streamer específico.
+        """
         url = "https://api.twitch.tv/helix/clips"
         headers = {
             'Authorization': f'Bearer {access_token}',
-            'Client-Id': os.environ.get('CLIENT_ID'),
+            'Client-Id': config('TWITCH_CLIENT_ID'),
         }
 
-        # Parámetros de la API, usando el twitch_id del streamer como broadcaster_id
+        # Rango de fechas: últimos 30 días
+        started_at = (now() - timedelta(days=30)).isoformat()
+        ended_at = now().isoformat()
         params = {
             'broadcaster_id': streamer.twitch_id,
-            'first': 100,  # Aumentamos el número para obtener más clips
-            'started_at': (timezone.now() - timezone.timedelta(days=30)).isoformat(),
-            'ended_at': timezone.now().isoformat(),
+            'first': 100,
+            'started_at': started_at,
+            'ended_at': ended_at,
         }
 
-        # Hacer la solicitud a la API de Twitch
-        response = requests.get(url, headers=headers, params=params)
+        all_clips = []
+        while True:
+            response = requests.get(url, headers=headers, params=params)
+            response.raise_for_status()
 
-        if response.status_code != 200:
-            self.stdout.write(self.style.ERROR(f"Error {response.status_code}: {response.text}"))
-            return []
+            data = response.json()
+            clips_data = data.get('data', [])
+            all_clips.extend(clips_data)
 
-        # Obtener los datos de los clips
-        clips_data = response.json().get('data', [])
+            # Manejo de paginación
+            pagination = data.get('pagination', {}).get('cursor')
+            if not pagination:
+                break
+            params['after'] = pagination
 
-        # Filtrar y ordenar los clips por cantidad de vistas
-        sorted_clips = sorted(clips_data, key=lambda x: x.get('view_count', 0), reverse=True)[:5]  # Los 5 más populares
-
-        # Guardar o actualizar los clips en la base de datos
-        for clip_data in sorted_clips:
+        # Filtrar y guardar los 5 clips más populares
+        top_clips = sorted(all_clips, key=lambda x: x.get('view_count', 0), reverse=True)[:5]
+        for clip_data in top_clips:
             Clip.objects.update_or_create(
                 streamer=streamer,
-                url=clip_data['embed_url'],  # Usar la URL de incrustación
+                url=clip_data['embed_url'],  # Usa 'url' para guardar el enlace principal
                 defaults={
                     'title': clip_data['title'],
                     'language': clip_data['language'],
                     'from_twitch': True,
-                    'twitch_created_at': clip_data['created_at'],  # Asegúrate de usar el campo correcto
+                    'twitch_created_at': clip_data['created_at'],
                 }
             )
 
-        return sorted_clips
-
+        return top_clips

@@ -25,9 +25,9 @@ TWITCH_CLIENT_ID = config('TWITCH_CLIENT_ID')
 TWITCH_CLIENT_SECRET = config('TWITCH_CLIENT_SECRET')
 TWITCH_API_BASE_URL = config('TWITCH_API_BASE_URL')
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['popularclips.duckdns.org', 'www.popularclips.duckdns.org']
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -43,8 +43,24 @@ INSTALLED_APPS = [
     'django_filters',
     'clips',
     'rest_framework',
-    'csp',	
+#    'csp',
     'livereload',
+    'wagtail',
+    'wagtail.admin',
+    'wagtail.images',
+    'wagtail.documents',
+    'wagtail.users',
+    'wagtail.snippets',
+    'wagtail.search',
+    'wagtail.sites',
+    'wagtail_modeladmin',
+    'wagtail.contrib.forms',
+    'wagtail.api.v2',
+    'taggit',
+    'modelcluster',
+    'cms',
+#    'bakerydemo.blog',
+
 ]
 
 REST_FRAMEWORK = {
@@ -87,10 +103,21 @@ WSGI_APPLICATION = 'popularclips.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+#DATABASES = {
+#    'default': {
+#        'ENGINE': 'django.db.backends.sqlite3',
+#        'NAME': BASE_DIR / 'db.sqlite3',
+#    }
+#}
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'popularclips_db',
+        'USER': 'popularclips_user',
+        'PASSWORD': 'popularclips',
+        'HOST': '10.0.142.85',  # IP privada de la instancia de PostgreSQL
+        'PORT': '5432',
     }
 }
 
@@ -135,6 +162,7 @@ STATIC_URL = '/static/'
 #    os.path.join(BASE_DIR, 'popularclips/ico'), 
 #]
 STATICFILES_DIRS = []
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 
     # Otros directorios de archivos estáticos si los tienes
@@ -148,21 +176,22 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_REDIRECT_URL = '/clips/'  # Redirige a la página principal de clips
 LOGOUT_REDIRECT_URL = '/clips/'  # Redirige a la página principal de clips
 LOGIN_URL = '/accounts/login/'
-CSP_DEFAULT_SRC = ("'self'",)
-CSP_SCRIPT_SRC = (
-    "'self'", 
-    "https://ajax.googleapis.com",
-    "https://cdnjs.cloudflare.com",
-    "https://code.jquery.com",
-    "https://stackpath.bootstrapcdn.com"  # Si usas Bootstrap
-)
-CSP_STYLE_SRC = (
-    "'self'",
-    "https://fonts.googleapis.com",
-    "https://stackpath.bootstrapcdn.com"  # Para Bootstrap
-)
-CSP_IMG_SRC = ("'self'", "data:", "https://your-image-source.com")
-CSP_FRAME_SRC = ("'self'", "https://clips.twitch.tv", "https://player.twitch.tv")
+
+#CSP_DEFAULT_SRC = ("'self'",)
+#CSP_SCRIPT_SRC = (
+#    "'self'", 
+#    "https://ajax.googleapis.com",
+#    "https://cdnjs.cloudflare.com",
+#    "https://code.jquery.com",
+#    "https://stackpath.bootstrapcdn.com"  # Si usas Bootstrap
+#)
+#CSP_STYLE_SRC = (
+#    "'self'",
+#    "https://fonts.googleapis.com",
+#    "https://stackpath.bootstrapcdn.com"  # Para Bootstrap
+#)
+#CSP_IMG_SRC = ("'self'", "data:", "https://your-image-source.com")
+#CSP_FRAME_SRC = ("'self'", "https://clips.twitch.tv", "https://player.twitch.tv")
 
 
 CSRF_TRUSTED_ORIGINS = [
@@ -195,3 +224,5 @@ LOGGING = {
 }
 
 
+WAGTAILADMIN_BASE_URL = "https://popularclips.duckdns.org"
+WAGTAIL_SITE_NAME = "PopularClips"
